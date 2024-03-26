@@ -4,6 +4,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Root from "./components/Root";
+import Candidates from "./components/Candidates";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -15,7 +16,7 @@ const App = () => {
       children: [
         {
           path: "candidates",
-          element: <div>candidates</div>,
+          element: <Candidates />,
           // children: [
           //   {
           //     path: ":candidateId",
