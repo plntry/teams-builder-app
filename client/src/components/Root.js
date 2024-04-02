@@ -22,12 +22,12 @@ const Root = () => {
       label: "Data",
       children: [
         {
-          label: "Candidates",
-          path: '/candidates'
-        },
-        {
           label: "Specializations",
           path: '/specializations'
+        },
+        {
+          label: "Candidates",
+          path: '/candidates'
         },
         {
           label: "Compatibilities",

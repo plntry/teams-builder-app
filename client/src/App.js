@@ -4,7 +4,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Root from "./components/Root";
-import Candidates from "./components/Candidates";
+import Candidates from "./components/DataComponents/Candidates";
+import Specializations from "./components/DataComponents/Specializations";
+import Compatibilities from "./components/DataComponents/Comptibilities";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -23,8 +25,16 @@ const App = () => {
           element: <div>candidate</div>
         },
         {
+          path: "specializations",
+          element: <Specializations />
+        },
+        {
+          path: "specializations/:specializationId",
+          element: <div>specialization</div>
+        },
+        {
           path: "compatibilities",
-          element: <Candidates />
+          element: <Compatibilities />
         },
         {
           path: "compatibilities/:compatibilityId",
