@@ -16,17 +16,19 @@ const App = () => {
       children: [
         {
           path: "candidates",
-          element: <Candidates />,
-          // children: [
-          //   {
-          //     path: ":candidateId",
-          //     element: <div>candidate</div>
-          //   }
-          // ]
+          element: <Candidates />
         },
         {
           path: "candidates/:candidateId",
           element: <div>candidate</div>
+        },
+        {
+          path: "compatibilities",
+          element: <Candidates />
+        },
+        {
+          path: "compatibilities/:compatibilityId",
+          element: <div>compatibility</div>
         }
       ],
     },
