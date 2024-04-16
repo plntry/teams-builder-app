@@ -4,9 +4,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Root from "./components/Root";
-import Candidates from "./components/DataComponents/Candidates";
-import Specializations from "./components/DataComponents/Specializations";
-import Compatibilities from "./components/DataComponents/Comptibilities";
+import Candidates from "./components/DataComponents/candidates/Candidates";
+import Specializations from "./components/DataComponents/specializations/Specializations";
+import Compatibilities from "./components/DataComponents/compatibilities/Compatibilities";
 
 const App = () => {
   const router = createBrowserRouter([

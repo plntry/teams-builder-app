@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Space, Tag } from "antd";
-import { baseUrl } from "../../constants.js";
+import { baseUrl } from "../../../constants.js";
 
 const Compatibilities = () => {
   const [candidates, setCandidates] = useState([]);
