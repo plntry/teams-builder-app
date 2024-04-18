@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Table, Space, Tag } from "antd";
+import { Table, Space, Button } from "antd";
 import { baseUrl } from "../../../constants.js";
+import ModalComp from "../../Modal/ModalComp.js";
 
 const Compatibilities = () => {
   const [candidates, setCandidates] = useState([]);
   const [compatibilities, setCompatibilities] = useState([]);
+  const [modalState, setModalState] = useState({
+    action: "edit",
+    status: false,
+  });
+  const [currentCompatibility, setCurrentCompatibility] = useState({});
+
+  const handleAddEditDeleteClick = (action, element) => {
+    setModalState((current) => {
+      return { action: action, status: !current.status };
+    });
+
+    setCurrentCompatibility(element);
+  };
 
   const getCandidates = async () => {
     const link = `${baseUrl}/candidates`;
@@ -26,14 +40,20 @@ const Compatibilities = () => {
       const response = await fetch(link);
       const jsonData = await response.json();
 
-      const preparedData = await jsonData.map((dataEl) => {
-        return {
-          ...dataEl,
-          candidate1_name: candidates.filter((el) => el.candidate_id === dataEl.candidate1_id)[0]?.fullname,
-          candidate2_name: candidates.filter((el) => el.candidate_id === dataEl.candidate2_id)[0]?.fullname,
-          key: dataEl.compatibility_id
-        };
-      });
+      const preparedData = await jsonData
+        .map((dataEl) => {
+          return {
+            ...dataEl,
+            candidate1_name: candidates.filter(
+              (el) => el.candidate_id === dataEl.candidate1_id
+            )[0]?.fullname,
+            candidate2_name: candidates.filter(
+              (el) => el.candidate_id === dataEl.candidate2_id
+            )[0]?.fullname,
+            key: dataEl.compatibility_id,
+          };
+        })
+        .sort((a, b) => a.compatibility_id - b.compatibility_id);
       setCompatibilities(preparedData);
     } catch (err) {
       console.log(`Error in getting compatibilities: ${err.message}`);
@@ -87,7 +107,46 @@ const Compatibilities = () => {
 
   return (
     <>
-      <Table dataSource={compatibilities} columns={columns} />
+      <Space
+        direction="vertical"
+        size="middle"
+        style={{
+          display: "flex",
+        }}
+      >
+        {modalState.status && (
+          <ModalComp
+            setDataElements={setCandidates}
+            specializations={[]}
+            formMode="compatibility"
+            modalState={modalState}
+            setModalState={setModalState}
+            currentElement={currentCompatibility}
+          />
+        )}
+        <Space
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            type="primary"
+            onClick={() =>
+              handleAddEditDeleteClick("add", {
+                compatibility_id: "will be generated automatically",
+                candidate1_id: candidates[0].candidate_id,
+                candidate2_id: candidates[1].candidate_id,
+                compatibility: "",
+              })
+            }
+          >
+            Add New
+          </Button>
+        </Space>
+        <Table dataSource={compatibilities} columns={columns} />
+      </Space>
     </>
   );
 };

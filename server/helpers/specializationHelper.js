@@ -48,7 +48,7 @@ specialization.update = async (req, res) => {
     console.log(res.params);
 
     const updateCandidate = await pool.query(
-      "UPDATE specialization SET name = $1 WHERE candidate_id = $2",
+      "UPDATE specialization SET name = $1 WHERE specialization_id = $2",
       [name, id]
     );
     res.json("specialization info was updated!");

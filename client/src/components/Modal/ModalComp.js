@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, Input, Checkbox } from "antd";
+import { Modal } from "antd";
 import AddEditForm from "./AddEditForm";
 
 const ModalComp = ({
+  setDataElements,
   specializations,
+  formMode,
   modalState,
   setModalState,
   currentElement,
@@ -23,7 +25,7 @@ const ModalComp = ({
       : "Delete Row";
 
   const handleOk = () => {
-    setModalText("The window will be closed after two seconds...");
+    setModalText("Success! The window will be closed after two seconds...");
     setConfirmLoading(true);
     setTimeout(() => {
       setModalState(false);
@@ -38,25 +40,45 @@ const ModalComp = ({
 
   return (
     <>
-      <Modal
-        title={modalTitle}
-        open={modalState}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        <p>{modalText}</p>
-        {(modalState.action === "add" || modalState.action === "edit") && (
+      {(modalState.action === "add" || modalState.action === "edit") && (
+        <Modal
+          title={modalTitle}
+          open={modalState}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <p>{modalText}</p>
           <AddEditForm
             specializations={specializations}
             formState={modalState.action}
-            formMode="candidate"
+            formMode={formMode}
             currentElement={currentElement}
             handleOk={handleOk}
           />
-        )}
-      </Modal>
+        </Modal>
+      )}
+      {(modalState.action === "delete") && (
+        <Modal
+          title={modalTitle}
+          open={modalState}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <p>{modalText}</p>
+          <AddEditForm
+            setDataElements={setDataElements}
+            specializations={specializations}
+            formState={modalState.action}
+            formMode={formMode}
+            currentElement={currentElement}
+            handleOk={handleOk}
+          />
+        </Modal>
+      )}
     </>
   );
 };

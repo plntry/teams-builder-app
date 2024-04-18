@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Space, Input, Button } from "antd";
+import { Table, Space, Button } from "antd";
 import { baseUrl } from "../../../constants.js";
 import ModalComp from "../../Modal/ModalComp.js";
 
@@ -13,9 +13,7 @@ const Candidates = () => {
   const [currentCandidate, setCurrentCandidate] = useState({});
 
   const handleAddEditDeleteClick = (action, element) => {
-    console.log(action, "action");
     setModalState((current) => {
-      console.log(current, "current");
       return { action: action, status: !current.status };
     });
 
@@ -41,22 +39,22 @@ const Candidates = () => {
       const response = await fetch(link);
       const jsonData = await response.json();
 
-      const preparedData = await jsonData.map((dataEl) => {
-        return {
-          ...dataEl,
-          specialization_name: specializations.filter(
-            (el) => el.specialization_id === dataEl.specialization_id
-          )[0]?.name,
-          key: dataEl.candidate_id,
-        };
-      });
+      const preparedData = await jsonData
+        .map((dataEl) => {
+          return {
+            ...dataEl,
+            specialization_name: specializations.filter(
+              (el) => el.specialization_id === dataEl.specialization_id
+            )[0]?.name,
+            key: dataEl.candidate_id,
+          };
+        })
+        .sort((a, b) => a.candidate_id - b.candidate_id);
       setCandidates(preparedData);
     } catch (err) {
       console.log(`Error in getting candidates: ${err.message}`);
     }
   };
-
-  console.log(candidates);
 
   const columns = [
     {
@@ -118,7 +116,9 @@ const Candidates = () => {
     >
       {modalState.status && (
         <ModalComp
+          setDataElements={setCandidates}
           specializations={specializations}
+          formMode='candidate'
           modalState={modalState}
           setModalState={setModalState}
           currentElement={currentCandidate}
