@@ -4,15 +4,16 @@ import { baseUrl } from "../../constants";
 
 const AddEditForm = ({
   setDataElements,
-  specializations = [],
+  additionalData = [],
   formState = "edit",
   formMode = "candidate",
   currentElement = {},
   handleOk,
 }) => {
-  const handleSpecialSelectChange = (value) => {
-    console.log(`selected ${value} specialization`);
-  };
+  console.log(additionalData, "add data");
+  // const handleSpecialSelectChange = (value) => {
+  //   console.log(`selected ${value} specialization`);
+  // };
 
   const sendQuery = async (url, method = "POST", body) => {
     try {
@@ -34,16 +35,16 @@ const AddEditForm = ({
     formMode === "candidate"
       ? {
           ...currentElement,
-          specialization: specializations.filter(
+          specialization: additionalData.filter(
             (el) => el.specialization_id === currentElement.specialization_id
           )[0].name,
         }
       : formMode === "specialization"
       ? {
-          ...currentElement
+          ...currentElement,
         }
       : {
-          ...currentElement
+          ...currentElement,
         };
 
   const formElements =
@@ -90,10 +91,6 @@ const AddEditForm = ({
                     if (value === "" || value === null) {
                       reject("Please enter the age!");
                     } else if (!Number.isInteger(+value)) {
-                      console.log(
-                        Number.isInteger(+value),
-                        "Number.isInteger(+value)"
-                      );
                       reject("The age should be integer!");
                     } else if (value < 0) {
                       reject("The age should be grater then zero!");
@@ -117,8 +114,8 @@ const AddEditForm = ({
             ],
             element: (
               <Select
-                onChange={handleSpecialSelectChange}
-                options={specializations.map((el) => {
+                // onChange={handleSpecialSelectChange}
+                options={additionalData.map((el) => {
                   return {
                     value: el.specialization_id,
                     label: el.name,
@@ -130,78 +127,143 @@ const AddEditForm = ({
         ]
       : formMode === "specialization"
       ? [
-        {
-          label: "ID",
-          name: `${formMode}_id`,
-          rules: [
-            {
-              required: true,
-              message: "The row should have an id!",
-            },
-          ],
-          element: <Input disabled />,
-        },
-        {
-          label: "Name",
-          name: "name",
-          rules: [
-            {
-              required: true,
-              validator(rule, value) {
-                return new Promise((resolve, reject) => {
-                  if (value === "" || value === null) {
-                    reject("Please enter the name!");
-                  } else if (value.length > 0) {
-                    resolve();
-                  }
-                });
+          {
+            label: "ID",
+            name: `${formMode}_id`,
+            rules: [
+              {
+                required: true,
+                message: "The row should have an id!",
               },
-            },
-          ],
-          element: <Input disabled={formState === "delete"} />,
-        }
-      ]
+            ],
+            element: <Input disabled />,
+          },
+          {
+            label: "Name",
+            name: "name",
+            rules: [
+              {
+                required: true,
+                validator(rule, value) {
+                  return new Promise((resolve, reject) => {
+                    if (value === "" || value === null) {
+                      reject("Please enter the name!");
+                    } else if (value.length > 0) {
+                      resolve();
+                    }
+                  });
+                },
+              },
+            ],
+            element: <Input disabled={formState === "delete"} />,
+          },
+        ]
       : [
-        {
-          label: "ID",
-          name: `${formMode}_id`,
-          rules: [
-            {
-              required: true,
-              message: "The row should have an id!",
-            },
-          ],
-          element: <Input disabled />,
-        },
-        {
-          label: "Specialization",
-          name: "specialization",
-          rules: [
-            {
-              required: true,
-              message: "Please select the specialization!",
-            },
-          ],
-          element: (
-            <Select
-              onChange={handleSpecialSelectChange}
-              options={specializations.map((el) => {
-                return {
-                  value: el.specialization_id,
-                  label: el.name,
-                };
-              })}
-            />
-          ),
-        },
-      ];
+          {
+            label: "ID",
+            name: `${formMode}_id`,
+            rules: [
+              {
+                required: true,
+                message: "The row should have an id!",
+              },
+            ],
+            element: <Input disabled />,
+          },
+          {
+            label: "Candidate 1",
+            name: "candidate1",
+            rules: [
+              {
+                required: true,
+                message: "Please select the candidate 1!",
+              },
+            ],
+            element: (
+              <Select
+                // onChange={handleSpecialSelectChange}
+                options={additionalData.map((el) => {
+                  return {
+                    value: el.candidate_id,
+                    label: el.fullname,
+                  };
+                })}
+              />
+            ),
+          },
+          {
+            label: "Candidate 2",
+            name: "candidate2",
+            rules: [
+              {
+                required: true,
+                message: "Please select the candidate 2!",
+              },
+            ],
+            element: (
+              <Select
+                // onChange={handleSpecialSelectChange}
+                options={additionalData.map((el) => {
+                  return {
+                    value: el.candidate_id,
+                    label: el.fullname,
+                  };
+                })}
+              />
+            ),
+          },
+          {
+            label: "Compatibility",
+            name: "compatibility",
+            rules: [
+              {
+                required: true,
+                validator(rule, value) {
+                  return new Promise((resolve, reject) => {
+                    if (value === "" || value === null) {
+                      reject("Please enter the compatibility!");
+                    } else if (isNaN(+value) || !(typeof +value === "number")) {
+                      reject("The compatibility should be a number!");
+                    } else if (value < 0 || value > 1) {
+                      reject(
+                        "The compatibility cannot be less then zero or grater then one!"
+                      );
+                    } else {
+                      resolve();
+                    }
+                  });
+                },
+              },
+            ],
+            element: <Input />,
+          },
+        ];
 
   const onFinish = async (values) => {
+    console.log(values, "val test");
+    console.log(formMode);
     if (formMode === "candidate" && typeof values.specialization === "string") {
-      let specId = specializations.filter(
+      let specId = additionalData.filter(
         (el) => el.name === values.specialization
       )[0].specialization_id;
       values.specialization = specId;
+    } else if (formMode === "compatibility") {
+      if (typeof values.candidate1 === "string") {
+        console.log("here");
+        let cand1Id = additionalData.filter(
+          (el) => el.fullname === values.candidate1
+        )[0].candidate_id;
+
+        values.candidate1 = cand1Id;
+      }
+
+      if (typeof values.candidate2 === "string") {
+        let cand2Id = additionalData.filter(
+          (el) => el.fullname === values.candidate2
+        )[0].candidate_id;
+
+        values.candidate2 = cand2Id;
+      }
     }
 
     let url = {};
@@ -217,7 +279,6 @@ const AddEditForm = ({
         };
 
         await sendQuery(url, "POST", body);
-
       } else if (formState === "edit") {
         url = `${baseUrl}/candidates/${values.candidate_id}`;
         body = {
@@ -226,38 +287,57 @@ const AddEditForm = ({
           specialization_id: values.specialization,
         };
         await sendQuery(url, "PUT", body);
-
       } else if (formState === "delete") {
         url = `${baseUrl}/candidates/${values.candidate_id}`;
         body = {};
         await sendQuery(url, "DELETE", body);
-
       }
     } else if (formMode === "specialization") {
       if (formState === "add") {
         url = `${baseUrl}/specializations`;
         body = {
-          name: values.name
+          name: values.name,
         };
 
         await sendQuery(url, "POST", body);
-
       } else if (formState === "edit") {
         url = `${baseUrl}/specializations/${values.specialization_id}`;
         body = {
-          name: values.name
+          name: values.name,
         };
 
         await sendQuery(url, "PUT", body);
-
       } else if (formState === "delete") {
         url = `${baseUrl}/specializations/${values.specialization_id}`;
         body = {};
 
         await sendQuery(url, "DELETE", body);
-
       }
     } else {
+      if (formState === "add") {
+        url = `${baseUrl}/compatibilities`;
+        body = {
+          candidate1_id: values.candidate1,
+          candidate2_id: values.candidate2,
+          compatibility: +values.compatibility,
+        };
+
+        await sendQuery(url, "POST", body);
+      } else if (formState === "edit") {
+        url = `${baseUrl}/compatibilities/${values.compatibility_id}`;
+        body = {
+          candidate1_id: values.candidate1,
+          candidate2_id: values.candidate2,
+          compatibility: +values.compatibility,
+        };
+
+        await sendQuery(url, "PUT", body);
+      } else if (formState === "delete") {
+        url = `${baseUrl}/compatibilities/${values.compatibility_id}`;
+        body = {};
+
+        await sendQuery(url, "DELETE", body);
+      }
     }
 
     console.log("Success:", values);
@@ -305,14 +385,16 @@ const AddEditForm = ({
             >
               {formElements[0].element}
             </Form.Item>
-            <Form.Item
-              label={formElements[1].label}
-              name={formElements[1].name}
-              rules={formElements[1].rules}
-              key={formElements[1].name}
-            >
-              {formElements[1].element}
-            </Form.Item>
+            {formMode !== "compatibility" && (
+              <Form.Item
+                label={formElements[1].label}
+                name={formElements[1].name}
+                rules={formElements[1].rules}
+                key={formElements[1].name}
+              >
+                {formElements[1].element}
+              </Form.Item>
+            )}
           </>
         )}
         <Space

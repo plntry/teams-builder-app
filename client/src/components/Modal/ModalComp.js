@@ -4,7 +4,7 @@ import AddEditForm from "./AddEditForm";
 
 const ModalComp = ({
   setDataElements,
-  specializations,
+  additionalData,
   formMode,
   modalState,
   setModalState,
@@ -51,7 +51,7 @@ const ModalComp = ({
         >
           <p>{modalText}</p>
           <AddEditForm
-            specializations={specializations}
+            additionalData={additionalData}
             formState={modalState.action}
             formMode={formMode}
             currentElement={currentElement}
@@ -71,7 +71,7 @@ const ModalComp = ({
           <p>{modalText}</p>
           <AddEditForm
             setDataElements={setDataElements}
-            specializations={specializations}
+            additionalData={additionalData}
             formState={modalState.action}
             formMode={formMode}
             currentElement={currentElement}

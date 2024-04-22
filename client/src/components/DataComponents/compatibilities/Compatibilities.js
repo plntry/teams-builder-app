@@ -17,7 +17,11 @@ const Compatibilities = () => {
       return { action: action, status: !current.status };
     });
 
-    setCurrentCompatibility(element);
+    setCurrentCompatibility({
+      ...element,
+      candidate1: candidates.filter((el) => element.candidate1_id === el.candidate_id)[0].fullname,
+      candidate2: candidates.filter((el) => element.candidate2_id === el.candidate_id)[0].fullname
+    });
   };
 
   const getCandidates = async () => {
@@ -61,6 +65,7 @@ const Compatibilities = () => {
   };
 
   console.log(compatibilities);
+  console.log(candidates);
 
   const columns = [
     {
@@ -86,10 +91,17 @@ const Compatibilities = () => {
     {
       title: "Action",
       key: "compatibility_id",
-      render: (_) => (
-        <Space size="middle" key={_.candidate_id}>
-          <a>Edit</a>
-          <a>Delete</a>
+      render: (el) => (
+        <Space size="middle" key={el.compatibility_id_id}>
+          <Button type="link" onClick={() => handleAddEditDeleteClick("edit", el)}>
+            Edit
+          </Button>
+          <Button
+            type="link"
+            onClick={() => handleAddEditDeleteClick("delete", el)}
+          >
+            Delete
+          </Button>
         </Space>
       ),
     },
@@ -117,7 +129,7 @@ const Compatibilities = () => {
         {modalState.status && (
           <ModalComp
             setDataElements={setCandidates}
-            specializations={[]}
+            additionalData={candidates}
             formMode="compatibility"
             modalState={modalState}
             setModalState={setModalState}
@@ -138,6 +150,8 @@ const Compatibilities = () => {
                 compatibility_id: "will be generated automatically",
                 candidate1_id: candidates[0].candidate_id,
                 candidate2_id: candidates[1].candidate_id,
+                candidate1: candidates[0].fullname,
+                candidate2: candidates[1].fullname,
                 compatibility: "",
               })
             }

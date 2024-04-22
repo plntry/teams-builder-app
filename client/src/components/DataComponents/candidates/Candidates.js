@@ -117,7 +117,7 @@ const Candidates = () => {
       {modalState.status && (
         <ModalComp
           setDataElements={setCandidates}
-          specializations={specializations}
+          additionalData={specializations}
           formMode='candidate'
           modalState={modalState}
           setModalState={setModalState}

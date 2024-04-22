@@ -84,7 +84,7 @@ const Specializations = () => {
       {modalState.status && (
         <ModalComp
           setDataElements={setSpecializations}
-          specializations={[]}
+          additionalData={[]}
           formMode='specialization'
           modalState={modalState}
           setModalState={setModalState}
