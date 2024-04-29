@@ -62,10 +62,10 @@ compatibility.delete = async (req, res) => {
     const { id } = req.params;
 
     const deleteCandidate = await pool.query(
-      "DELETE FROM compatibility WHERE candidate_id = $1",
+      "DELETE FROM compatibility WHERE compatibility_id = $1",
       [id]
     );
-    res.json("candidate info was deleted!");
+    res.json("compatibility info was deleted!");
   } catch (error) {
     console.log(error.message);
   }
