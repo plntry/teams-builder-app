@@ -25,8 +25,12 @@ const Compatibilities = () => {
 
     setCurrentCompatibility({
       ...element,
-      candidate1: candidates.filter((el) => element.candidate1_id === el.candidate_id)[0].fullname,
-      candidate2: candidates.filter((el) => element.candidate2_id === el.candidate_id)[0].fullname
+      candidate1: candidates.filter(
+        (el) => element.candidate1_id === el.candidate_id
+      )[0].fullname,
+      candidate2: candidates.filter(
+        (el) => element.candidate2_id === el.candidate_id
+      )[0].fullname,
     });
   };
 
@@ -77,29 +81,47 @@ const Compatibilities = () => {
     {
       title: "ID",
       dataIndex: "compatibility_id",
+      defaultSortOrder: "ascend",
+      sorter: (a, b) => a.compatibility_id - b.compatibility_id,
       key: "compatibility_id",
     },
     {
       title: "Candidate 1",
       dataIndex: "candidate1_name",
-      key: "compatibility_id",
+      filters: candidates.map((el) => {
+        return { key: el.candidate_id, text: el.fullname, value: el.fullname };
+      }),
+      onFilter: (value, record) =>
+        record.candidate1_name.indexOf(value) === 0,
+      sorter: (a, b) => a.candidate1_name.localeCompare(b.candidate1_name),
+      key: "candidate1_name",
     },
     {
       title: "Candidate 2",
       dataIndex: "candidate2_name",
-      key: "compatibility_id",
+      filters: candidates.map((el) => {
+        return { key: el.candidate_id, text: el.fullname, value: el.fullname };
+      }),
+      onFilter: (value, record) =>
+        record.candidate2_name.indexOf(value) === 0,
+      sorter: (a, b) => a.candidate2_name.localeCompare(b.candidate2_name),
+      key: "candidate2_name",
     },
     {
       title: "Compatibility",
       dataIndex: "compatibility",
-      key: "compatibility_id",
+      sorter: (a, b) => a.compatibility - b.compatibility,
+      key: "compatibility",
     },
     {
       title: "Action",
-      key: "compatibility_id",
+      key: "action",
       render: (el) => (
         <Space size="middle" key={el.compatibility_id_id}>
-          <Button type="link" onClick={() => handleAddEditDeleteClick("edit", el)}>
+          <Button
+            type="link"
+            onClick={() => handleAddEditDeleteClick("edit", el)}
+          >
             Edit
           </Button>
           <Button
@@ -165,7 +187,13 @@ const Compatibilities = () => {
             Add New
           </Button>
         </Space>
-        <Table dataSource={compatibilities} columns={columns} />
+        <Table
+          dataSource={compatibilities}
+          columns={columns}
+          showSorterTooltip={{
+            target: "sorter-icon",
+          }}
+        />
       </Space>
     </>
   );

@@ -66,29 +66,43 @@ const Candidates = () => {
     {
       title: "ID",
       dataIndex: "candidate_id",
+      defaultSortOrder: "ascend",
+      sorter: (a, b) => a.candidate_id - b.candidate_id,
       key: "candidate_id",
     },
     {
       title: "Full Name",
       dataIndex: "fullname",
-      key: "candidate_id",
+      sorter: (a, b) => a.fullname.localeCompare(b.fullname),
+      key: "fullname",
     },
     {
       title: "Specialization",
       dataIndex: "specialization_name",
-      key: "candidate_id",
+      filters: specializations.map((el) => {
+        return { key: el.specialization_id, text: el.name, value: el.name };
+      }),
+      onFilter: (value, record) =>
+        record.specialization_name.indexOf(value) === 0,
+      sorter: (a, b) =>
+        a.specialization_name.localeCompare(b.specialization_name),
+      key: "specialization_name",
     },
     {
       title: "Age",
       dataIndex: "age",
-      key: "candidate_id",
+      sorter: (a, b) => a.age - b.age,
+      key: "age",
     },
     {
       title: "Action",
-      key: "candidate_id",
+      key: "action",
       render: (el) => (
         <Space size="middle" key={el.candidate_id}>
-          <Button type="link" onClick={() => handleAddEditDeleteClick("edit", el)}>
+          <Button
+            type="link"
+            onClick={() => handleAddEditDeleteClick("edit", el)}
+          >
             Edit
           </Button>
           <Button
@@ -124,7 +138,7 @@ const Candidates = () => {
         <ModalComp
           setDataElements={setCandidates}
           additionalData={specializations}
-          formMode='candidate'
+          formMode="candidate"
           modalState={modalState}
           setModalState={setModalState}
           currentElement={currentCandidate}
@@ -137,15 +151,28 @@ const Candidates = () => {
           alignItems: "center",
         }}
       >
-        <Button type="primary" onClick={() => handleAddEditDeleteClick("add", {
-          candidate_id: "will be generated automatically",
-          fullname: "",
-          age: "",
-          specialization_id: specializations[0].specialization_id,
-          specialization: specializations[0].name
-        })}>Add New</Button>
+        <Button
+          type="primary"
+          onClick={() =>
+            handleAddEditDeleteClick("add", {
+              candidate_id: "will be generated automatically",
+              fullname: "",
+              age: "",
+              specialization_id: specializations[0].specialization_id,
+              specialization: specializations[0].name,
+            })
+          }
+        >
+          Add New
+        </Button>
       </Space>
-      <Table dataSource={candidates} columns={columns} />
+      <Table
+        dataSource={candidates}
+        columns={columns}
+        showSorterTooltip={{
+          target: "sorter-icon",
+        }}
+      />
     </Space>
   );
 };

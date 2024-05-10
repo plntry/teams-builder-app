@@ -1,8 +1,9 @@
 import React from "react";
 import Root from "../components/Root";
-import Candidates from "../components/DataComponents/candidates/Candidates";
-import Specializations from "../components/DataComponents/specializations/Specializations";
-import Compatibilities from "../components/DataComponents/compatibilities/Compatibilities";
+import Candidates from "../components/DataComponents/candidates";
+import Specializations from "../components/DataComponents/specializations";
+import Compatibilities from "../components/DataComponents/compatibilities";
+import HomePage from "../components/HomePage";
 
 const routes = [
   {
@@ -11,6 +12,10 @@ const routes = [
     // errorElement: <Spin />,
     // loader: <Spin />,
     children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
       {
         path: "candidates",
         element: <Candidates />,
