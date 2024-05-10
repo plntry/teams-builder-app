@@ -2,10 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Table, Space, Button } from "antd";
 import { baseUrl } from "../../../constants.js";
 import ModalComp from "../../Modal/ModalComp.js";
+import useStore from "../../../store/store.js";
 
 const Compatibilities = () => {
-  const [candidates, setCandidates] = useState([]);
-  const [compatibilities, setCompatibilities] = useState([]);
+  // const [candidates, setCandidates] = useState([]);
+  const candidates = useStore.use.candidates();
+  const setCandidates = useStore.use.setCandidates();
+  // const [compatibilities, setCompatibilities] = useState([]);
+  const compatibilities = useStore.use.compatibilities();
+  const setCompatibilities = useStore.use.setCompatibilities();
+
   const [modalState, setModalState] = useState({
     action: "edit",
     status: false,

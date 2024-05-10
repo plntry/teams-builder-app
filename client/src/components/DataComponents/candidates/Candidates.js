@@ -2,10 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Table, Space, Button } from "antd";
 import { baseUrl } from "../../../constants.js";
 import ModalComp from "../../Modal/ModalComp.js";
+import useStore from "../../../store/store.js";
 
 const Candidates = () => {
-  const [specializations, setSpecializations] = useState([]);
-  const [candidates, setCandidates] = useState([]);
+  // const [specializations, setSpecializations] = useState([]);
+  const specializations = useStore.use.specializations();
+  const setSpecializations = useStore.use.setSpecializations();
+  // const [candidates, setCandidates] = useState([]);
+  const candidates = useStore.use.candidates();
+  const setCandidates = useStore.use.setCandidates();
+
   const [modalState, setModalState] = useState({
     action: "edit",
     status: false,

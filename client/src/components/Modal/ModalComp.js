@@ -10,6 +10,8 @@ const ModalComp = ({
   setModalState,
   currentElement,
 }) => {
+  // setDataElements = useStore.use.;
+
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState(
     modalState.action === "edit" || modalState.action === "add"
