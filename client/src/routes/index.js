@@ -4,6 +4,7 @@ import Candidates from "../components/DataComponents/candidates";
 import Specializations from "../components/DataComponents/specializations";
 import Compatibilities from "../components/DataComponents/compatibilities";
 import HomePage from "../components/HomePage";
+import FormTeams from "../components/DataComponents/FormTeams";
 
 const routes = [
   {
@@ -42,7 +43,7 @@ const routes = [
       },
       {
         path: "form-teams",
-        element: <div>form teams</div>,
+        element: <FormTeams />,
       },
     ],
   },

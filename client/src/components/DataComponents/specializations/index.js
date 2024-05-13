@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Table, Space, Button } from "antd";
-import { baseUrl } from "../../../constants.js";
 import ModalComp from "../../Modal/ModalComp.js";
 import useStore from "../../../store/store.js";
+import apiHelper from "../../../api/helper.js";
 
 const Specializations = () => {
-  // const [specializations, setSpecializations] = useState([]);
   const specializations = useStore.use.specializations();
   const setSpecializations = useStore.use.setSpecializations();
 
@@ -21,25 +20,6 @@ const Specializations = () => {
     });
 
     setCurrentSpecialization(element);
-  };
-
-  const getSpecializations = async () => {
-    const link = `${baseUrl}/specializations`;
-
-    try {
-      const response = await fetch(link);
-      const jsonData = await response.json();
-
-      const preparedData = await jsonData
-        .map((dataEl) => {
-          return { ...dataEl, key: dataEl.specialization_id };
-        })
-        .sort((a, b) => a.specialization_id - b.specialization_id);
-      setSpecializations(preparedData);
-      console.log(specializations, "spec");
-    } catch (err) {
-      console.log(`Error in getting specializations: ${err.message}`);
-    }
   };
 
   const columns = [
@@ -86,7 +66,14 @@ const Specializations = () => {
   ];
 
   useEffect(() => {
-    getSpecializations();
+    if (!specializations.length) {
+      async function getData() {
+        const retrievedData = await apiHelper.specializations.get();
+        setSpecializations(retrievedData);
+      }
+
+      getData();
+    } 
   }, []);
 
   return (

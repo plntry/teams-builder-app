@@ -350,7 +350,7 @@ const AddEditForm = ({
   return (
     <>
       <Form
-        name="basic"
+        name="modalForm"
         labelCol={{
           span: 6,
         }}

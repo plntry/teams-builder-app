@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Table, Space, Button } from "antd";
-import { baseUrl } from "../../../constants.js";
 import ModalComp from "../../Modal/ModalComp.js";
 import useStore from "../../../store/store.js";
+import apiHelper from "../../../api/helper.js";
 
 const Candidates = () => {
-  // const [specializations, setSpecializations] = useState([]);
   const specializations = useStore.use.specializations();
   const setSpecializations = useStore.use.setSpecializations();
-  // const [candidates, setCandidates] = useState([]);
+
   const candidates = useStore.use.candidates();
   const setCandidates = useStore.use.setCandidates();
 
@@ -18,48 +17,34 @@ const Candidates = () => {
   });
   const [currentCandidate, setCurrentCandidate] = useState({});
 
+  useEffect(() => {
+    if (!specializations.length) {
+      async function getData() {
+        const retrievedData = await apiHelper.specializations.get();
+        setSpecializations(retrievedData);
+      }
+
+      getData();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (specializations.length > 0 && !candidates.length) {
+      async function getData() {
+        const retrievedData = await apiHelper.candidates.get(specializations);
+        setCandidates(retrievedData);
+      }
+
+      getData();
+    }
+  }, [specializations]);
+
   const handleAddEditDeleteClick = (action, element) => {
     setModalState((current) => {
       return { action: action, status: !current.status };
     });
 
     setCurrentCandidate(element);
-  };
-
-  const getSpecializations = async () => {
-    const link = `${baseUrl}/specializations`;
-
-    try {
-      const response = await fetch(link);
-      const jsonData = await response.json();
-      setSpecializations(jsonData);
-    } catch (err) {
-      console.log(`Error in getting specializations: ${err.message}`);
-    }
-  };
-
-  const getCandidates = async () => {
-    const link = `${baseUrl}/candidates`;
-
-    try {
-      const response = await fetch(link);
-      const jsonData = await response.json();
-
-      const preparedData = await jsonData
-        .map((dataEl) => {
-          return {
-            ...dataEl,
-            specialization_name: specializations.filter(
-              (el) => el.specialization_id === dataEl.specialization_id
-            )[0]?.name,
-            key: dataEl.candidate_id,
-          };
-        })
-        .sort((a, b) => a.candidate_id - b.candidate_id);
-      setCandidates(preparedData);
-    } catch (err) {
-      console.log(`Error in getting candidates: ${err.message}`);
-    }
   };
 
   const columns = [
@@ -115,16 +100,6 @@ const Candidates = () => {
       ),
     },
   ];
-
-  useEffect(() => {
-    getSpecializations();
-  }, []);
-
-  useEffect(() => {
-    if (specializations.length > 0) {
-      getCandidates();
-    }
-  }, [specializations]);
 
   return (
     <Space

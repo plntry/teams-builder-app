@@ -61,13 +61,11 @@ const Sidebar = () => {
           setSidebarSelectedElement(sidebarElementIndexes[item.path]);
           navigate(item.path);
         }
-        console.log(index + 1, 'key');
       },
     };
 
     if (item?.children) {
       menuItem.children = item.children.map((subItem, j) => {
-        // const subKey = index * 4 + j + 1;
         const subKey = parseFloat(`${index + 1}.${j + 1}`)
         return {
           key: subKey,
@@ -77,7 +75,6 @@ const Sidebar = () => {
               setSidebarSelectedElement(sidebarElementIndexes[subItem.path]);
               navigate(subItem.path);
             }
-            console.log(subKey, 'sub key');
           },
         };
       });
