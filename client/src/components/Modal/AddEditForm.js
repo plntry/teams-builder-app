@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Form, Input, Select, Space } from "antd";
 import { baseUrl } from "../../constants";
+import useStore from '../../store/store';
 
 const AddEditForm = ({
   setDataElements,
@@ -10,10 +11,15 @@ const AddEditForm = ({
   currentElement = {},
   handleOk,
 }) => {
-  console.log(additionalData, "add data");
   // const handleSpecialSelectChange = (value) => {
   //   console.log(`selected ${value} specialization`);
   // };
+
+  const candidates = useStore.use.candidates();
+  const setCandidates = useStore.use.setCandidates();
+
+  const compatibilities = useStore.use.compatibilities();
+  const setCompatibilities = useStore.use.setCompatibilities();
 
   const sendQuery = async (url, method = "POST", body) => {
     try {
@@ -23,9 +29,9 @@ const AddEditForm = ({
         body: JSON.stringify(body),
       });
       const jsonData = await response.json();
-      console.log(jsonData, "query res");
+      return jsonData;
 
-      window.location.reload();
+      // window.location.reload();
     } catch (err) {
       console.log(`Error in posting candidate: ${err.message}`);
     }
@@ -240,8 +246,6 @@ const AddEditForm = ({
         ];
 
   const onFinish = async (values) => {
-    console.log(values, "val test");
-    console.log(formMode);
     if (formMode === "candidate" && typeof values.specialization === "string") {
       let specId = additionalData.filter(
         (el) => el.name === values.specialization
@@ -249,7 +253,6 @@ const AddEditForm = ({
       values.specialization = specId;
     } else if (formMode === "compatibility") {
       if (typeof values.candidate1 === "string") {
-        console.log("here");
         let cand1Id = additionalData.filter(
           (el) => el.fullname === values.candidate1
         )[0].candidate_id;
@@ -322,7 +325,15 @@ const AddEditForm = ({
           compatibility: +values.compatibility,
         };
 
-        await sendQuery(url, "POST", body);
+        let jsonData = await sendQuery(url, "POST", body);
+        let preparedData = jsonData;
+        preparedData.key = preparedData[`${formMode}_id`];
+        preparedData.candidate1_name = candidates.filter((el) => el.candidate_id === preparedData.candidate1_id)[0]['fullname'];
+        preparedData.candidate2_name = candidates.filter((el) => el.candidate_id === preparedData.candidate2_id)[0]['fullname'];
+        console.log(preparedData, 'prep data test');
+
+        setCompatibilities([...compatibilities, preparedData]);
+        console.log(compatibilities, 'comp updated');
       } else if (formState === "edit") {
         url = `${baseUrl}/compatibilities/${values.compatibility_id}`;
         body = {
