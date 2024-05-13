@@ -1,16 +1,21 @@
 import React from "react";
 import { Flex, Button, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import useStore from '../../store/store';
+import { sidebarElementIndexes } from "../../constants";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const setSidebarSelectedElement = useStore.use.setSidebarSelectedElement();
 
   const {
     token: { colorText },
   } = theme.useToken();
 
-  const handleLearnMoreClick = () => {
-    navigate('/about');
+  const handleNavigate = (link) => {
+    console.log(sidebarElementIndexes[link], 'sidebarElementIndexes[link]');
+    setSidebarSelectedElement(sidebarElementIndexes[link]);
+    navigate(link);
   }
 
   return (
@@ -41,10 +46,10 @@ const HomePage = () => {
           margin: "25px 15px",
         }}
       >
-        <Button type="primary" size="large" style>
+        <Button type="primary" size="large" onClick={() => handleNavigate('/form-teams')}>
           Start forming teams
         </Button>
-        <Button type="dashed" onClick={handleLearnMoreClick}>Learn more</Button>
+        <Button type="dashed" onClick={() => handleNavigate('/about')}>Learn more</Button>
       </Flex>
       <Flex
         justify="flex-end"

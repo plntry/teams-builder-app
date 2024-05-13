@@ -40,6 +40,10 @@ const routes = [
         path: "compatibilities/:compatibilityId",
         element: <div>compatibility</div>,
       },
+      {
+        path: "form-teams",
+        element: <div>form teams</div>,
+      },
     ],
   },
 ];

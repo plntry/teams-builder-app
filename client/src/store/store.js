@@ -10,6 +10,8 @@ const store = createStore((set) => ({
   setCompatibilities: (compatibilities) => set(() => ({ compatibilities: compatibilities })),
   chosenSpecializations: [],
   setChosenSpecializations: (specializations) => set(() => ({ chosenSpecializations: specializations })),
+  sidebarSelectedElement: '1',
+  setSidebarSelectedElement: (el) => set(() => ({ sidebarSelectedElement: el })),
 }));
 
 export default createSelectors(store);

@@ -3,19 +3,30 @@ import {
   HomeOutlined,
   InfoCircleOutlined,
   DatabaseOutlined,
+  BuildOutlined
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
+import useStore from '../../../store/store';
+import { sidebarElementIndexes } from "../../../constants";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const { Sider } = Layout;
+
+  const sidebarSelectedElement = useStore.use.sidebarSelectedElement();
+  const setSidebarSelectedElement = useStore.use.setSidebarSelectedElement();
 
   const sidebarMenuItems = [
     {
       icon: HomeOutlined,
       label: "Home",
       path: "/",
+    },
+    {
+      icon: BuildOutlined,
+      label: "Form Teams",
+      path: "/form-teams",
     },
     {
       icon: DatabaseOutlined,
@@ -47,21 +58,26 @@ const Sidebar = () => {
       label: item.label,
       onClick: () => {
         if (item.path) {
+          setSidebarSelectedElement(sidebarElementIndexes[item.path]);
           navigate(item.path);
         }
+        console.log(index + 1, 'key');
       },
     };
 
     if (item?.children) {
       menuItem.children = item.children.map((subItem, j) => {
-        const subKey = index * 4 + j + 1;
+        // const subKey = index * 4 + j + 1;
+        const subKey = parseFloat(`${index + 1}.${j + 1}`)
         return {
           key: subKey,
           label: subItem.label,
           onClick: () => {
             if (subItem.path) {
+              setSidebarSelectedElement(sidebarElementIndexes[subItem.path]);
               navigate(subItem.path);
             }
+            console.log(subKey, 'sub key');
           },
         };
       });
@@ -85,7 +101,7 @@ const Sidebar = () => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={["1"]}
+        selectedKeys={sidebarSelectedElement}
         items={sidebarMenuItems}
       />
     </Sider>
