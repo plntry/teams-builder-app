@@ -27,12 +27,13 @@ const ModalComp = ({
       : "Delete Row";
 
   const handleOk = () => {
-    setModalText("Success! The window will be closed after two seconds...");
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setModalState(false);
-      setConfirmLoading(false);
-    }, 2000);
+    setModalText("Success!");
+    // setConfirmLoading(true);
+    // setTimeout(() => {
+    //   setModalState(false);
+    //   setConfirmLoading(false);
+    // }, 2000);
+    setModalState(false);
   };
 
   const handleCancel = () => {

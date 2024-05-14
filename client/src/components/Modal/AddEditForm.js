@@ -18,6 +18,9 @@ const AddEditForm = ({
   const candidates = useStore.use.candidates();
   const setCandidates = useStore.use.setCandidates();
 
+  const specializations = useStore.use.specializations();
+  const setSpecializations = useStore.use.setSpecializations();
+
   const compatibilities = useStore.use.compatibilities();
   const setCompatibilities = useStore.use.setCompatibilities();
 
@@ -281,7 +284,12 @@ const AddEditForm = ({
           specialization_id: values.specialization,
         };
 
-        await sendQuery(url, "POST", body);
+        let jsonData = await sendQuery(url, "POST", body);
+        let preparedData = jsonData;
+        preparedData.key = preparedData[`${formMode}_id`];
+        preparedData.specialization_name = specializations.filter((el) => el.specialization_id === preparedData.specialization_id)[0]['name'];
+
+        setCandidates([...candidates, preparedData]);
       } else if (formState === "edit") {
         url = `${baseUrl}/candidates/${values.candidate_id}`;
         body = {
@@ -289,11 +297,26 @@ const AddEditForm = ({
           age: values.age,
           specialization_id: values.specialization,
         };
+        
         await sendQuery(url, "PUT", body);
+        let preparedData = body;
+        preparedData.candidate_id = values.candidate_id;
+        preparedData.specialization_name = specializations.filter((el) => el.specialization_id === preparedData.specialization_id)[0]['name'];
+
+        let updatedData = candidates.map((el) => {
+          if (el.candidate_id === body.candidate_id) {
+            return { ...el, ...body };
+          }
+          return el;
+        });
+        setCandidates(updatedData);
       } else if (formState === "delete") {
         url = `${baseUrl}/candidates/${values.candidate_id}`;
         body = {};
+
         await sendQuery(url, "DELETE", body);
+        let updatedData = candidates.filter((el) => el.candidate_id !== values.candidate_id);
+        setCandidates(updatedData);
       }
     } else if (formMode === "specialization") {
       if (formState === "add") {
@@ -302,7 +325,11 @@ const AddEditForm = ({
           name: values.name,
         };
 
-        await sendQuery(url, "POST", body);
+        let jsonData = await sendQuery(url, "POST", body);
+        let preparedData = jsonData;
+        preparedData.key = preparedData[`${formMode}_id`];
+
+        setSpecializations([...specializations, preparedData]);
       } else if (formState === "edit") {
         url = `${baseUrl}/specializations/${values.specialization_id}`;
         body = {
@@ -310,11 +337,24 @@ const AddEditForm = ({
         };
 
         await sendQuery(url, "PUT", body);
+        let preparedData = body;
+        preparedData.specialization_id = values.specialization_id;
+
+        let updatedData = specializations.map((el) => {
+          if (el.specialization_id === body.specialization_id) {
+            return { ...el, ...body };
+          }
+          return el;
+        });
+        setSpecializations(updatedData);
       } else if (formState === "delete") {
         url = `${baseUrl}/specializations/${values.specialization_id}`;
         body = {};
 
         await sendQuery(url, "DELETE", body);
+
+        let updatedData = specializations.filter((el) => el.specialization_id !== values.specialization_id);
+        setSpecializations(updatedData);
       }
     } else {
       if (formState === "add") {
@@ -330,10 +370,8 @@ const AddEditForm = ({
         preparedData.key = preparedData[`${formMode}_id`];
         preparedData.candidate1_name = candidates.filter((el) => el.candidate_id === preparedData.candidate1_id)[0]['fullname'];
         preparedData.candidate2_name = candidates.filter((el) => el.candidate_id === preparedData.candidate2_id)[0]['fullname'];
-        console.log(preparedData, 'prep data test');
 
         setCompatibilities([...compatibilities, preparedData]);
-        console.log(compatibilities, 'comp updated');
       } else if (formState === "edit") {
         url = `${baseUrl}/compatibilities/${values.compatibility_id}`;
         body = {
@@ -343,11 +381,26 @@ const AddEditForm = ({
         };
 
         await sendQuery(url, "PUT", body);
+        let preparedData = body;
+        preparedData.compatibility_id = values.compatibility_id;
+        preparedData.candidate1_name = candidates.filter((el) => el.candidate_id === preparedData.candidate1_id)[0]['fullname'];
+        preparedData.candidate2_name = candidates.filter((el) => el.candidate_id === preparedData.candidate2_id)[0]['fullname'];
+
+        let updatedData = compatibilities.map((el) => {
+          if (el.compatibility_id === body.compatibility_id) {
+            return { ...el, ...body };
+          }
+          return el;
+        });
+        setCompatibilities(updatedData);
       } else if (formState === "delete") {
         url = `${baseUrl}/compatibilities/${values.compatibility_id}`;
         body = {};
 
         await sendQuery(url, "DELETE", body);
+
+        let updatedData = compatibilities.filter((el) => el.compatibility_id !== values.compatibility_id);
+        setCompatibilities(updatedData);
       }
     }
 
