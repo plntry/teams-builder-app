@@ -4,7 +4,6 @@ import useStore from "../../../store/store";
 import apiHelper from "../../../api/helper";
 
 const FormTeams = () => {
-  console.log(useStore.getState(), 'state test');
   useStore.setState(useStore.getState());
 
   const specializations = useStore.use.specializations();
@@ -14,7 +13,6 @@ const FormTeams = () => {
 
   const chosenSpecializations = useStore.use.chosenSpecializations();
   const setChosenSpecializations = useStore.use.setChosenSpecializations();
-  console.log(chosenSpecializations, 'test1');
 
   const [checkAllSpecializations, setCheckAllSpecializations] = useState(false);
   const [checkedSpecializationsList, setCheckedSpecializationsList] = useState(
@@ -34,7 +32,6 @@ const FormTeams = () => {
 
   useEffect(() => {
     setChosenSpecializations(checkedSpecializationsList);
-    console.log(chosenSpecializations, "chosen spec test");
   }, [
     checkedSpecializationsList,
     chosenSpecializations,
