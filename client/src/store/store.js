@@ -21,9 +21,12 @@ const store = createStore(
         set(() => ({ sidebarSelectedElement: el })),
 
       // form process
-      chosenSpecializations: [],
+      chosenSpecializations: {},
       setChosenSpecializations: (specializations) =>
         set(() => ({ chosenSpecializations: specializations })),
+      chosenCandidates: [],
+      setChosenCandidates: (candidates) =>
+        set(() => ({ chosenCandidates: candidates })),
     }),
     {
       name: "appStorage",

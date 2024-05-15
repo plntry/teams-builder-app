@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Flex, Button, Checkbox, Form, Input, Select } from "antd";
+import {
+  Flex,
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Select,
+  Transfer,
+  Table,
+  Space,
+  Switch,
+  Tag,
+  Typography,
+} from "antd";
 import useStore from "../../../store/store";
 import apiHelper from "../../../api/helper";
 
@@ -9,15 +22,17 @@ const FormTeams = () => {
   const specializations = useStore.use.specializations();
   const setSpecializations = useStore.use.setSpecializations();
 
-  
-
   const chosenSpecializations = useStore.use.chosenSpecializations();
   const setChosenSpecializations = useStore.use.setChosenSpecializations();
 
-  const [checkAllSpecializations, setCheckAllSpecializations] = useState(false);
-  const [checkedSpecializationsList, setCheckedSpecializationsList] = useState(
-    chosenSpecializations
-  );
+  const candidates = useStore.use.candidates();
+  const setCandidates = useStore.use.setCandidates();
+
+  const chosenCandidates = useStore.use.chosenCandidates();
+  const setChosenCandidates = useStore.use.setChosenCandidates();
+
+  const [targetKeys, setTargetKeys] = useState(chosenCandidates);
+  const [selectedKeys, setSelectedKeys] = useState([]);
 
   useEffect(() => {
     if (!specializations.length) {
@@ -31,12 +46,27 @@ const FormTeams = () => {
   }, []);
 
   useEffect(() => {
-    setChosenSpecializations(checkedSpecializationsList);
-  }, [
-    checkedSpecializationsList,
-    chosenSpecializations,
-    setChosenSpecializations,
-  ]);
+    let chosenSpecializationsToSet = {};
+
+    chosenCandidates.forEach((id) => {
+      let candidate = candidates[id - 1];
+      chosenSpecializationsToSet[candidate.specialization_id] = candidate.specialization_name;
+    });
+    console.log(chosenSpecializationsToSet, 'chosenSpecializationsToSet');
+    setChosenSpecializations(chosenSpecializationsToSet);
+
+  }, [candidates, chosenCandidates, setChosenCandidates])
+
+  useEffect(() => {
+    if (specializations.length > 0 && !candidates.length) {
+      async function getData() {
+        const retrievedData = await apiHelper.candidates.get(specializations);
+        setCandidates(retrievedData);
+      }
+
+      getData();
+    }
+  }, [specializations]);
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -52,72 +82,118 @@ const FormTeams = () => {
     };
   });
 
-  const onSpecializationCheckboxesChange = (list) => {
-    setCheckedSpecializationsList(list);
-    setCheckAllSpecializations(list.length === specializationOptions.length);
-  };
+  // const onSpecializationCheckboxesChange = (list) => {
+  //   setCheckedSpecializationsList(list);
+  //   setCheckAllSpecializations(list.length === specializationOptions.length);
+  // };
 
-  const onCheckAllSpecializationsChange = (e) => {
-    let preparedList = specializationOptions.map((option) => option.value);
-    setCheckedSpecializationsList(e.target.checked ? preparedList : []);
-    setCheckAllSpecializations(e.target.checked);
+  // const onCheckAllSpecializationsChange = (e) => {
+  //   let preparedList = specializationOptions.map((option) => option.value);
+  //   setCheckedSpecializationsList(e.target.checked ? preparedList : []);
+  //   setCheckAllSpecializations(e.target.checked);
+  // };
+
+  const candidatesDataSource = candidates.map((el) => ({
+    key: el.key,
+    fullname: el.fullname,
+    specialization_name: el.specialization_name,
+  }));
+
+  const handleChange = (newTargetKeys, direction, moveKeys) => {
+    setTargetKeys(newTargetKeys);
+    setChosenCandidates(newTargetKeys);
+    // console.log("targetKeys: ", newTargetKeys);
+    // console.log("direction: ", direction);
+    // console.log("moveKeys: ", moveKeys);
+  };
+  const handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
   const formElements = [
-    {
-      label: "Specializations to include",
-      name: `chosenSpecializations`,
-      rules: [
-        {
-          required: true,
-          message: "The row should have an id!",
-        },
-      ],
-      element: (
-        <>
-          <Checkbox
-            onChange={onCheckAllSpecializationsChange}
-            checked={checkAllSpecializations}
-          >
-            All
-          </Checkbox>
-          <Checkbox.Group
-            options={specializationOptions}
-            value={checkedSpecializationsList}
-            onChange={onSpecializationCheckboxesChange}
-          />
-        </>
-      ),
-    },
     // {
-    //   label: "Specialization",
-    //   name: "specialization",
+    //   label: "Specializations:",
+    //   name: `chosenSpecializations`,
+    //   valuePropName: "checked",
     //   rules: [
     //     {
     //       required: true,
-    //       message: "Please select the specialization!",
+    //       message: "Please accept the terms & conditions",
     //     },
     //   ],
     //   element: (
-    //     <Select
-    //       // onChange={handleSpecialSelectChange}
-    //       options={specializations.map((el) => {
-    //         return {
-    //           value: el.specialization_id,
-    //           label: el.name,
-    //         };
-    //       })}
-    //     />
+    //     <>
+    //       <Checkbox
+    //         onChange={onCheckAllSpecializationsChange}
+    //         checked={checkAllSpecializations}
+    //       >
+    //         All
+    //       </Checkbox>
+    //       <Checkbox.Group
+    //         options={specializationOptions}
+    //         value={checkedSpecializationsList}
+    //         onChange={onSpecializationCheckboxesChange}
+    //       />
+    //     </>
     //   ),
     // },
+    {
+      label: "Select target candidates to form the teams:",
+      name: `chosenCandidates`,
+      valuePropName: "checked",
+      rules: [
+        {
+          required: true,
+          message: "Please accept the terms & conditions",
+        },
+      ],
+      element: (
+        <Flex vertical justify="center" align="center">
+          <Transfer
+            dataSource={candidatesDataSource}
+            titles={["Source", "Target"]}
+            targetKeys={targetKeys}
+            selectedKeys={selectedKeys}
+            onChange={handleChange}
+            onSelectChange={handleSelectChange}
+            // pagination
+            render={(item) => {
+              return (
+                <Flex gap="7px">
+                  <Typography>{item.fullname}</Typography>
+                  <Tag
+                    color={
+                      item.specialization_name === "manager"
+                        ? "purple"
+                        : item.specialization_name === "developer"
+                        ? "cyan"
+                        : item.specialization_name === "designer"
+                        ? "volcano"
+                        : "green"
+                    }
+                  >
+                    {item.specialization_name}
+                  </Tag>
+                </Flex>
+              );
+            }}
+            oneWay
+            listStyle={{
+              width: 'auto',
+              minWidth: '300px',
+              height: 300,
+            }}
+          />
+        </Flex>
+      ),
+    },
   ];
   return (
-    <Flex
-      vertical
-      // style={{background:'yellow'}}
-    >
+    <Flex vertical>
       <Form
         name="formTeams"
+        layout="vertical"
+        // labelCol='true'
         // labelCol={{
         //   span: 8,
         // }}
@@ -136,7 +212,7 @@ const FormTeams = () => {
       >
         {formElements.map((el) => {
           return (
-            <Form.Item label={el.label} rules={el.rules} key={el.name}>
+            <Form.Item label={el.label} labelCol rules={el.rules} key={el.name} valuePropName={el.valuePropName}>
               {el.element}
             </Form.Item>
           );
