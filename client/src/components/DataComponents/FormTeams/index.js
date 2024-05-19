@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Button,
   Checkbox,
   Form,
-  Input,
-  Select,
   Transfer,
-  Table,
-  Space,
-  Switch,
   Tag,
   Typography,
+  message,
+  Tooltip,
+  InputNumber,
 } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import useStore from "../../../store/store";
 import apiHelper from "../../../api/helper";
+import checkCompatibilitiesData from "./validationHelper";
 
 const FormTeams = () => {
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
   useStore.setState(useStore.getState());
 
   const specializations = useStore.use.specializations();
@@ -30,6 +33,14 @@ const FormTeams = () => {
 
   const chosenCandidates = useStore.use.chosenCandidates();
   const setChosenCandidates = useStore.use.setChosenCandidates();
+
+  const compatibilities = useStore.use.compatibilities();
+
+  const useCustomIterationsNumber = useStore.use.useCustomIterationsNumber();
+  const setUseCustomIterationsNumber = useStore.use.setUseCustomIterationsNumber();
+
+  const iterationsAmount = useStore.use.iterationsAmount();
+  const setIterationsAmount = useStore.use.setIterationsAmount();
 
   const [targetKeys, setTargetKeys] = useState(chosenCandidates);
   const [selectedKeys, setSelectedKeys] = useState([]);
@@ -50,12 +61,18 @@ const FormTeams = () => {
 
     chosenCandidates.forEach((id) => {
       let candidate = candidates[id - 1];
-      chosenSpecializationsToSet[candidate.specialization_id] = candidate.specialization_name;
-    });
-    console.log(chosenSpecializationsToSet, 'chosenSpecializationsToSet');
-    setChosenSpecializations(chosenSpecializationsToSet);
 
-  }, [candidates, chosenCandidates, setChosenCandidates])
+      if (
+        !chosenSpecializationsToSet.hasOwnProperty(candidate.specialization_id)
+      ) {
+        chosenSpecializationsToSet[candidate.specialization_id] = 0;
+      }
+
+      chosenSpecializationsToSet[candidate.specialization_id] += 1;
+    });
+
+    setChosenSpecializations(chosenSpecializationsToSet);
+  }, [candidates, chosenCandidates, setChosenCandidates]);
 
   useEffect(() => {
     if (specializations.length > 0 && !candidates.length) {
@@ -68,31 +85,6 @@ const FormTeams = () => {
     }
   }, [specializations]);
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-
-  let specializationOptions = specializations.map((el) => {
-    return {
-      label: el.name,
-      value: el.specialization_id,
-    };
-  });
-
-  // const onSpecializationCheckboxesChange = (list) => {
-  //   setCheckedSpecializationsList(list);
-  //   setCheckAllSpecializations(list.length === specializationOptions.length);
-  // };
-
-  // const onCheckAllSpecializationsChange = (e) => {
-  //   let preparedList = specializationOptions.map((option) => option.value);
-  //   setCheckedSpecializationsList(e.target.checked ? preparedList : []);
-  //   setCheckAllSpecializations(e.target.checked);
-  // };
-
   const candidatesDataSource = candidates.map((el) => ({
     key: el.key,
     fullname: el.fullname,
@@ -102,53 +94,56 @@ const FormTeams = () => {
   const handleChange = (newTargetKeys, direction, moveKeys) => {
     setTargetKeys(newTargetKeys);
     setChosenCandidates(newTargetKeys);
-    // console.log("targetKeys: ", newTargetKeys);
-    // console.log("direction: ", direction);
-    // console.log("moveKeys: ", moveKeys);
   };
   const handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
+  const useCustomIterationsNumberCheckboxChange = (e) => {
+    setUseCustomIterationsNumber(e.target.checked);
+  };
+
+  const iterationsAmountInputChange = (value) => {
+    setIterationsAmount(value);
+  };
+
+  const onSubmitFormClick = () => {
+    const specializationRepeats = Object.values(chosenSpecializations);
+    const isSameAmount = specializationRepeats.every(
+      (value) => value === specializationRepeats[0]
+    );
+    const checkCompatibilitiesDataRes = checkCompatibilitiesData(chosenCandidates, candidates, compatibilities);
+
+    if (!chosenCandidates.length) {
+      messageApi.open({
+        type: "error",
+        content: "You should choose candidates first",
+      });
+    } else if (!isSameAmount) {
+      messageApi.open({
+        type: "error",
+        content:
+          "The amount of the candidates should be the same for every specialization",
+      });
+    } else if (!(checkCompatibilitiesDataRes.isFullData)) {
+      messageApi.open({
+        type: "error",
+        content: <>
+          The compatibility data is missed for the next pairs:
+          <div>{(checkCompatibilitiesDataRes.pairs).map((pair) => <div>{pair}</div>)}</div>
+        </>,
+      });
+    } else {
+      navigate('/teams-result');
+    }
+  };
+
   const formElements = [
-    // {
-    //   label: "Specializations:",
-    //   name: `chosenSpecializations`,
-    //   valuePropName: "checked",
-    //   rules: [
-    //     {
-    //       required: true,
-    //       message: "Please accept the terms & conditions",
-    //     },
-    //   ],
-    //   element: (
-    //     <>
-    //       <Checkbox
-    //         onChange={onCheckAllSpecializationsChange}
-    //         checked={checkAllSpecializations}
-    //       >
-    //         All
-    //       </Checkbox>
-    //       <Checkbox.Group
-    //         options={specializationOptions}
-    //         value={checkedSpecializationsList}
-    //         onChange={onSpecializationCheckboxesChange}
-    //       />
-    //     </>
-    //   ),
-    // },
     {
-      label: "Select target candidates to form the teams:",
+      label: "Select target candidates to form the teams",
       name: `chosenCandidates`,
-      valuePropName: "checked",
-      rules: [
-        {
-          required: true,
-          message: "Please accept the terms & conditions",
-        },
-      ],
       element: (
-        <Flex vertical justify="center" align="center">
+        <Flex justify="center" align="center" gap="30px">
           <Transfer
             dataSource={candidatesDataSource}
             titles={["Source", "Target"]}
@@ -156,7 +151,6 @@ const FormTeams = () => {
             selectedKeys={selectedKeys}
             onChange={handleChange}
             onSelectChange={handleSelectChange}
-            // pagination
             render={(item) => {
               return (
                 <Flex gap="7px">
@@ -179,11 +173,53 @@ const FormTeams = () => {
             }}
             oneWay
             listStyle={{
-              width: 'auto',
-              minWidth: '300px',
+              width: "auto",
+              minWidth: "300px",
               height: 300,
             }}
           />
+        </Flex>
+      ),
+    },
+    {
+      label: "",
+      name: `shouldUseCustomIterationsNumber`,
+      element: (
+        <Flex vertical justify="center" align="center">
+          {contextHolder}
+          <Checkbox
+            checked={useCustomIterationsNumber}
+            onChange={useCustomIterationsNumberCheckboxChange}
+          >
+            <Flex gap="8px">
+              Use Custom Iterations Number
+              <Tooltip title="The ability to set a custom number of iterations for the local search algorithm">
+                <QuestionCircleOutlined />
+              </Tooltip>
+            </Flex>
+          </Checkbox>
+          <InputNumber
+            disabled={!useCustomIterationsNumber ?? true}
+            min={100}
+            max={10000000}
+            defaultValue={iterationsAmount}
+            stringMode
+            step="1"
+            style={{ minWidth: "120px" }}
+            onChange={iterationsAmountInputChange}
+          />
+        </Flex>
+      ),
+    },
+    {
+      label: "",
+      name: `formTeamsButton`,
+      element: (
+        <Flex vertical justify="center" align="center">
+          {contextHolder}
+          <Button type="primary" htmlType="submit" onClick={onSubmitFormClick}>
+            Form the teams
+          </Button>
         </Flex>
       ),
     },
@@ -193,26 +229,20 @@ const FormTeams = () => {
       <Form
         name="formTeams"
         layout="vertical"
-        // labelCol='true'
-        // labelCol={{
-        //   span: 8,
-        // }}
-        // wrapperCol={{
-        //   span: 16,
-        // }}
-        // style={{
-        //   maxWidth: 600,
-        // }}
         initialValues={{
           remember: true,
         }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         {formElements.map((el) => {
           return (
-            <Form.Item label={el.label} labelCol rules={el.rules} key={el.name} valuePropName={el.valuePropName}>
+            <Form.Item
+              label={el.label}
+              labelCol
+              rules={el.rules}
+              key={el.name}
+              valuePropName={el.valuePropName}
+            >
               {el.element}
             </Form.Item>
           );

@@ -5,6 +5,7 @@ import Specializations from "../components/DataComponents/specializations";
 import Compatibilities from "../components/DataComponents/compatibilities";
 import HomePage from "../components/HomePage";
 import FormTeams from "../components/DataComponents/FormTeams";
+import TeamsResult from "../components/DataComponents/TeamsResult";
 
 const routes = [
   {
@@ -44,6 +45,10 @@ const routes = [
       {
         path: "form-teams",
         element: <FormTeams />,
+      },
+      {
+        path: "teams-result",
+        element: <TeamsResult />,
       },
     ],
   },

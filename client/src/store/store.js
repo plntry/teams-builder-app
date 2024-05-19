@@ -27,10 +27,15 @@ const store = createStore(
       chosenCandidates: [],
       setChosenCandidates: (candidates) =>
         set(() => ({ chosenCandidates: candidates })),
+      useCustomIterationsNumber: false,
+      setUseCustomIterationsNumber: (shouldUse) =>
+      set(() => ({ useCustomIterationsNumber: shouldUse })),
+      iterationsAmount: 10000,
+      setIterationsAmount: (iterationsAmount) =>
+      set(() => ({ iterationsAmount: iterationsAmount })),
     }),
     {
-      name: "appStorage",
-      // storage: createJSONStorage(() => sessionStorage)
+      name: "appStorage"
     }
   )
 );
