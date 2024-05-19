@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Form, Input, Select, Space } from "antd";
 import { baseUrl } from "../../constants";
+import useStore from '../../store/store';
 
 const AddEditForm = ({
   setDataElements,
@@ -10,10 +11,18 @@ const AddEditForm = ({
   currentElement = {},
   handleOk,
 }) => {
-  console.log(additionalData, "add data");
   // const handleSpecialSelectChange = (value) => {
   //   console.log(`selected ${value} specialization`);
   // };
+
+  const candidates = useStore.use.candidates();
+  const setCandidates = useStore.use.setCandidates();
+
+  const specializations = useStore.use.specializations();
+  const setSpecializations = useStore.use.setSpecializations();
+
+  const compatibilities = useStore.use.compatibilities();
+  const setCompatibilities = useStore.use.setCompatibilities();
 
   const sendQuery = async (url, method = "POST", body) => {
     try {
@@ -23,9 +32,9 @@ const AddEditForm = ({
         body: JSON.stringify(body),
       });
       const jsonData = await response.json();
-      console.log(jsonData, "query res");
+      return jsonData;
 
-      window.location.reload();
+      // window.location.reload();
     } catch (err) {
       console.log(`Error in posting candidate: ${err.message}`);
     }
@@ -240,8 +249,6 @@ const AddEditForm = ({
         ];
 
   const onFinish = async (values) => {
-    console.log(values, "val test");
-    console.log(formMode);
     if (formMode === "candidate" && typeof values.specialization === "string") {
       let specId = additionalData.filter(
         (el) => el.name === values.specialization
@@ -249,7 +256,6 @@ const AddEditForm = ({
       values.specialization = specId;
     } else if (formMode === "compatibility") {
       if (typeof values.candidate1 === "string") {
-        console.log("here");
         let cand1Id = additionalData.filter(
           (el) => el.fullname === values.candidate1
         )[0].candidate_id;
@@ -278,7 +284,12 @@ const AddEditForm = ({
           specialization_id: values.specialization,
         };
 
-        await sendQuery(url, "POST", body);
+        let jsonData = await sendQuery(url, "POST", body);
+        let preparedData = jsonData;
+        preparedData.key = preparedData[`${formMode}_id`];
+        preparedData.specialization_name = specializations.filter((el) => el.specialization_id === preparedData.specialization_id)[0]['name'];
+
+        setCandidates([...candidates, preparedData]);
       } else if (formState === "edit") {
         url = `${baseUrl}/candidates/${values.candidate_id}`;
         body = {
@@ -286,11 +297,26 @@ const AddEditForm = ({
           age: values.age,
           specialization_id: values.specialization,
         };
+        
         await sendQuery(url, "PUT", body);
+        let preparedData = body;
+        preparedData.candidate_id = values.candidate_id;
+        preparedData.specialization_name = specializations.filter((el) => el.specialization_id === preparedData.specialization_id)[0]['name'];
+
+        let updatedData = candidates.map((el) => {
+          if (el.candidate_id === body.candidate_id) {
+            return { ...el, ...body };
+          }
+          return el;
+        });
+        setCandidates(updatedData);
       } else if (formState === "delete") {
         url = `${baseUrl}/candidates/${values.candidate_id}`;
         body = {};
+
         await sendQuery(url, "DELETE", body);
+        let updatedData = candidates.filter((el) => el.candidate_id !== values.candidate_id);
+        setCandidates(updatedData);
       }
     } else if (formMode === "specialization") {
       if (formState === "add") {
@@ -299,7 +325,11 @@ const AddEditForm = ({
           name: values.name,
         };
 
-        await sendQuery(url, "POST", body);
+        let jsonData = await sendQuery(url, "POST", body);
+        let preparedData = jsonData;
+        preparedData.key = preparedData[`${formMode}_id`];
+
+        setSpecializations([...specializations, preparedData]);
       } else if (formState === "edit") {
         url = `${baseUrl}/specializations/${values.specialization_id}`;
         body = {
@@ -307,11 +337,24 @@ const AddEditForm = ({
         };
 
         await sendQuery(url, "PUT", body);
+        let preparedData = body;
+        preparedData.specialization_id = values.specialization_id;
+
+        let updatedData = specializations.map((el) => {
+          if (el.specialization_id === body.specialization_id) {
+            return { ...el, ...body };
+          }
+          return el;
+        });
+        setSpecializations(updatedData);
       } else if (formState === "delete") {
         url = `${baseUrl}/specializations/${values.specialization_id}`;
         body = {};
 
         await sendQuery(url, "DELETE", body);
+
+        let updatedData = specializations.filter((el) => el.specialization_id !== values.specialization_id);
+        setSpecializations(updatedData);
       }
     } else {
       if (formState === "add") {
@@ -322,7 +365,13 @@ const AddEditForm = ({
           compatibility: +values.compatibility,
         };
 
-        await sendQuery(url, "POST", body);
+        let jsonData = await sendQuery(url, "POST", body);
+        let preparedData = jsonData;
+        preparedData.key = preparedData[`${formMode}_id`];
+        preparedData.candidate1_name = candidates.filter((el) => el.candidate_id === preparedData.candidate1_id)[0]['fullname'];
+        preparedData.candidate2_name = candidates.filter((el) => el.candidate_id === preparedData.candidate2_id)[0]['fullname'];
+
+        setCompatibilities([...compatibilities, preparedData]);
       } else if (formState === "edit") {
         url = `${baseUrl}/compatibilities/${values.compatibility_id}`;
         body = {
@@ -332,11 +381,26 @@ const AddEditForm = ({
         };
 
         await sendQuery(url, "PUT", body);
+        let preparedData = body;
+        preparedData.compatibility_id = values.compatibility_id;
+        preparedData.candidate1_name = candidates.filter((el) => el.candidate_id === preparedData.candidate1_id)[0]['fullname'];
+        preparedData.candidate2_name = candidates.filter((el) => el.candidate_id === preparedData.candidate2_id)[0]['fullname'];
+
+        let updatedData = compatibilities.map((el) => {
+          if (el.compatibility_id === body.compatibility_id) {
+            return { ...el, ...body };
+          }
+          return el;
+        });
+        setCompatibilities(updatedData);
       } else if (formState === "delete") {
         url = `${baseUrl}/compatibilities/${values.compatibility_id}`;
         body = {};
 
         await sendQuery(url, "DELETE", body);
+
+        let updatedData = compatibilities.filter((el) => el.compatibility_id !== values.compatibility_id);
+        setCompatibilities(updatedData);
       }
     }
 
@@ -350,7 +414,7 @@ const AddEditForm = ({
   return (
     <>
       <Form
-        name="basic"
+        name="modalForm"
         labelCol={{
           span: 6,
         }}

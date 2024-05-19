@@ -1,16 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { Table, Space, Button } from "antd";
-import { baseUrl } from "../../../constants.js";
 import ModalComp from "../../Modal/ModalComp.js";
+import useStore from "../../../store/store.js";
+import apiHelper from "../../../api/helper.js";
 
 const Compatibilities = () => {
-  const [candidates, setCandidates] = useState([]);
-  const [compatibilities, setCompatibilities] = useState([]);
+  const candidates = useStore.use.candidates() ?? [];
+  const setCandidates = useStore.use.setCandidates();
+
+  const compatibilities = useStore.use.compatibilities();
+  const setCompatibilities = useStore.use.setCompatibilities();
+
   const [modalState, setModalState] = useState({
     action: "edit",
     status: false,
   });
   const [currentCompatibility, setCurrentCompatibility] = useState({});
+
+  useEffect(() => {
+    if (!candidates.length) {
+      async function getData() {
+        const retrievedData = await apiHelper.candidates.get();
+        setCandidates(retrievedData);
+      }
+
+      getData();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (candidates.length > 0 && !compatibilities.length) {
+      async function getData() {
+        const retrievedData = await apiHelper.compatibilities.get(candidates);
+        setCompatibilities(retrievedData);
+      }
+
+      getData();
+    }
+  }, [candidates]);
 
   const handleAddEditDeleteClick = (action, element) => {
     setModalState((current) => {
@@ -19,81 +46,58 @@ const Compatibilities = () => {
 
     setCurrentCompatibility({
       ...element,
-      candidate1: candidates.filter((el) => element.candidate1_id === el.candidate_id)[0].fullname,
-      candidate2: candidates.filter((el) => element.candidate2_id === el.candidate_id)[0].fullname
+      candidate1: candidates.filter(
+        (el) => element.candidate1_id === el.candidate_id
+      )[0].fullname,
+      candidate2: candidates.filter(
+        (el) => element.candidate2_id === el.candidate_id
+      )[0].fullname,
     });
   };
-
-  const getCandidates = async () => {
-    const link = `${baseUrl}/candidates`;
-
-    try {
-      const response = await fetch(link);
-      const jsonData = await response.json();
-
-      setCandidates(jsonData);
-    } catch (err) {
-      console.log(`Error in getting candidates: ${err.message}`);
-    }
-  };
-
-  const getCompatibilities = async () => {
-    const link = `${baseUrl}/compatibilities`;
-
-    try {
-      const response = await fetch(link);
-      const jsonData = await response.json();
-
-      const preparedData = await jsonData
-        .map((dataEl) => {
-          return {
-            ...dataEl,
-            candidate1_name: candidates.filter(
-              (el) => el.candidate_id === dataEl.candidate1_id
-            )[0]?.fullname,
-            candidate2_name: candidates.filter(
-              (el) => el.candidate_id === dataEl.candidate2_id
-            )[0]?.fullname,
-            key: dataEl.compatibility_id,
-          };
-        })
-        .sort((a, b) => a.compatibility_id - b.compatibility_id);
-      setCompatibilities(preparedData);
-    } catch (err) {
-      console.log(`Error in getting compatibilities: ${err.message}`);
-    }
-  };
-
-  console.log(compatibilities);
-  console.log(candidates);
 
   const columns = [
     {
       title: "ID",
       dataIndex: "compatibility_id",
+      defaultSortOrder: "ascend",
+      sorter: (a, b) => a.compatibility_id - b.compatibility_id,
       key: "compatibility_id",
     },
     {
       title: "Candidate 1",
       dataIndex: "candidate1_name",
-      key: "compatibility_id",
+      filters: candidates.map((el) => {
+        return { key: el.candidate_id, text: el.fullname, value: el.fullname };
+      }),
+      onFilter: (value, record) => record.candidate1_name.indexOf(value) === 0,
+      sorter: (a, b) => a.candidate1_name.localeCompare(b.candidate1_name),
+      key: "candidate1_name",
     },
     {
       title: "Candidate 2",
       dataIndex: "candidate2_name",
-      key: "compatibility_id",
+      filters: candidates.map((el) => {
+        return { key: el.candidate_id, text: el.fullname, value: el.fullname };
+      }),
+      onFilter: (value, record) => record.candidate2_name.indexOf(value) === 0,
+      sorter: (a, b) => a.candidate2_name.localeCompare(b.candidate2_name),
+      key: "candidate2_name",
     },
     {
       title: "Compatibility",
       dataIndex: "compatibility",
-      key: "compatibility_id",
+      sorter: (a, b) => a.compatibility - b.compatibility,
+      key: "compatibility",
     },
     {
       title: "Action",
-      key: "compatibility_id",
+      key: "action",
       render: (el) => (
         <Space size="middle" key={el.compatibility_id_id}>
-          <Button type="link" onClick={() => handleAddEditDeleteClick("edit", el)}>
+          <Button
+            type="link"
+            onClick={() => handleAddEditDeleteClick("edit", el)}
+          >
             Edit
           </Button>
           <Button
@@ -106,16 +110,6 @@ const Compatibilities = () => {
       ),
     },
   ];
-
-  useEffect(() => {
-    getCandidates();
-  }, []);
-
-  useEffect(() => {
-    if (candidates.length > 0) {
-      getCompatibilities();
-    }
-  }, [candidates]);
 
   return (
     <>
@@ -159,7 +153,13 @@ const Compatibilities = () => {
             Add New
           </Button>
         </Space>
-        <Table dataSource={compatibilities} columns={columns} />
+        <Table
+          dataSource={compatibilities}
+          columns={columns}
+          showSorterTooltip={{
+            target: "sorter-icon",
+          }}
+        />
       </Space>
     </>
   );
