@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Space, Tag } from "antd";
+import { Table, Space } from "antd";
 import { baseUrl } from "../../constants.js";
 
 const Candidates = () => {

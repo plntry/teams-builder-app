@@ -27,15 +27,40 @@ const store = createStore(
       chosenCandidates: [],
       setChosenCandidates: (candidates) =>
         set(() => ({ chosenCandidates: candidates })),
-      useCustomIterationsNumber: false,
-      setUseCustomIterationsNumber: (shouldUse) =>
-      set(() => ({ useCustomIterationsNumber: shouldUse })),
-      iterationsAmount: 10000,
-      setIterationsAmount: (iterationsAmount) =>
-      set(() => ({ iterationsAmount: iterationsAmount })),
+
+      // bee algorithm parameters
+      useCustomParametersValues: false,
+      setUseCustomParametersValues: (shouldUse) =>
+        set(() => ({ useCustomParametersValues: shouldUse })),
+      areaSize: 8,
+      setAreaSize: (areaSize) => set(() => ({ areaSize: areaSize })),
+      bestSize: 2,
+      setBestSize: (bestSize) => set(() => ({ bestSize: bestSize })),
+      noImprovementsNum: 5,
+      setNoImprovementsNum: (noImprovementsNum) =>
+        set(() => ({ noImprovementsNum: noImprovementsNum })),
+      amountOfMutations: 2,
+      setAmountOfMutations: (amountOfMutations) =>
+        set(() => ({ amountOfMutations: amountOfMutations })),
+
+      // bee algorithm main data
+      itemNames: [],
+      setItemNames: (itemNames) => set(() => ({ itemNames: itemNames })),
+      compData: {},
+      setCompData: (compData) => set(() => ({ compData: compData })),
+      algorithmResult: {
+        finalSolution: [],
+        maxProductValue: 0,
+        performanceData: {
+          iterationsCount: 0,
+          timeTaken: 0,
+        },
+      },
+      setAlgorithmResult: (algorithmResult) =>
+        set(() => ({ algorithmResult: algorithmResult })),
     }),
     {
-      name: "appStorage"
+      name: "appStorage",
     }
   )
 );

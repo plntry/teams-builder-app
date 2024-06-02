@@ -1,18 +1,17 @@
 import React from "react";
 import Root from "../components/Root";
-import Candidates from "../components/DataComponents/candidates";
-import Specializations from "../components/DataComponents/specializations";
-import Compatibilities from "../components/DataComponents/compatibilities";
+import Candidates from "../components/DataComponents/candidates/index";
+import Specializations from "../components/DataComponents/specializations/index";
+import Compatibilities from "../components/DataComponents/compatibilities/index";
 import HomePage from "../components/HomePage";
 import FormTeams from "../components/DataComponents/FormTeams";
 import TeamsResult from "../components/DataComponents/TeamsResult";
+import About from "../components/About";
 
 const routes = [
   {
     path: "/",
     element: <Root />,
-    // errorElement: <Spin />,
-    // loader: <Spin />,
     children: [
       {
         path: "/",
@@ -49,6 +48,10 @@ const routes = [
       {
         path: "teams-result",
         element: <TeamsResult />,
+      },
+      {
+        path: "about",
+        element: <About />,
       },
     ],
   },

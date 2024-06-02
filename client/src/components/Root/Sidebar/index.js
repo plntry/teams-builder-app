@@ -86,13 +86,6 @@ const Sidebar = () => {
     <Sider
       breakpoint="lg"
       collapsedWidth="0"
-      // onClick={onClick}
-      onBreakpoint={(broken) => {
-        console.log(broken, "broken");
-      }}
-      onCollapse={(collapsed, type) => {
-        console.log(collapsed, type, "collapsed type");
-      }}
     >
       <div className="demo-logo-vertical" />
       <Menu

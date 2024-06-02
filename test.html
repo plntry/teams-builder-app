@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+// Helper functions
+function randomChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function deepCopy(arr) {
+  return JSON.parse(JSON.stringify(arr));
+}
+
+function reduceProduct(arr) {
+  return arr.reduce((x, y) => x * y, 1);
+}
+
+function generatePossibleSolution(itemNames, n) {
+  let solutions = [];
+  let usedInd = new Set();
+
+  for (let i = 0; i < n; i++) {
+      let solution = [];
+      for (let rowItems of itemNames) {
+          while (true) {
+              let item = randomChoice(rowItems);
+              if (!usedInd.has(item)) {
+                  usedInd.add(item);
+                  solution.push(item);
+                  break;
+              }
+          }
+      }
+
+      solutions.push(solution);
+  }
+
+  return solutions;
+}
+
+function generateRandomMutationPlaces(maxAmount, amountOfMutations) {
+    let randomNumbers = [];
+    while (randomNumbers.length < amountOfMutations) {
+        let randomNumber = Math.floor(Math.random() * (maxAmount));
+        if (!randomNumbers.includes(randomNumber)) {
+            randomNumbers.push(randomNumber);
+        }
+    }
+    return randomNumbers;
+}
+
+function generateSearchArea(itemNames, areaSize, n) {
+  let area = [];
+  while (area.length !== areaSize) {
+      let solution = generatePossibleSolution(itemNames, n);
+
+      if (!area.some(sol => JSON.stringify(sol) === JSON.stringify(solution))) {
+          area.push(solution);
+      }
+  }
+  return area;
+}
+
+function fitness(solution, itemNames, compData) {
+    let compatibility = [];
+
+    for (let row of solution) {
+        let productValues = [];
+
+        for (let i = 0; i < row.length; i++) {
+            for (let j = i + 1; j < row.length; j++) {
+                let value = compData[`${row[i]}~${row[j]}`] ?? compData[`${row[j]}~${row[i]}`];
+
+                if (value === undefined) {
+                    console.error(`Value not found`);
+                    return 0;
+                }
+
+                productValues.push(value);
+            }
+        }
+
+        compatibility.push(productValues);
+    }
+
+    return compatibility.reduce((sum, arr) => sum + reduceProduct(arr), 0);
+}
+
+function findBestSolutions(compData, bestSize, currentSet, itemNames) {
+    console.log('here4');
+  currentSet.sort((a, b) => fitness(b, itemNames, compData) - fitness(a, itemNames, compData));
+  console.log('here5');
+
+  let bestRes = currentSet.slice(0, bestSize);
+  console.log('here6');
+  let firstBest = [fitness(bestRes[0], itemNames, compData), bestRes[0]];
+  console.log('here7');
+  return [bestRes, firstBest];
+}
+
+function mutation(valueSet, amountOfMutations, itemNames) {
+    console.log('here8');
+    // Ensure valueSet is properly structured
+    if (!Array.isArray(valueSet) || valueSet.length === 0 || !Array.isArray(valueSet[0]) || valueSet[0].length === 0) {
+        throw new Error("Invalid valueSet structure");
+    }
+
+    console.log('here9');
+
+    let valueLen = valueSet[0].length;
+    let objectSet = deepCopy(valueSet);
+
+    console.log(objectSet, 'here10');
+
+    for (let item of objectSet) {
+        // Generate a unique set of mutation points
+        let possiblePoints = generateRandomMutationPlaces(itemNames.length, amountOfMutations);
+        console.log('here11');
+        for (let i = 0; i < amountOfMutations; i++) {
+            console.log('here12');
+            if (possiblePoints.length === 0) break; // No more unique points available
+            let pointIndex = Math.floor(Math.random() * possiblePoints.length);
+            let mutationPoint = possiblePoints.splice(pointIndex, 1)[0]; // Remove selected point
+            console.log('here13');
+
+            let firstArray, secondArray;
+
+            do {
+                firstArray = Math.floor(Math.random() * valueLen);
+                secondArray = Math.floor(Math.random() * valueLen);
+            } while (firstArray === secondArray);
+
+            [item[firstArray][mutationPoint], item[secondArray][mutationPoint]] =
+                [item[secondArray][mutationPoint], item[firstArray][mutationPoint]];
+        }
+    }
+    return objectSet;
+}
+
+function beeAlgorithm(itemNames, compData, areaSize = 8, bestSize = 2, noImprovementsNum = 5, amountOfMutations = 2) {
+  let bestR = [];
+  let n = itemNames[0].length;
+  console.log('here1');
+
+  let currentSet = generateSearchArea(itemNames, areaSize, n);
+  let iterationsCount = 0;
+  let noImprovementCount = 0;
+  console.log('here2');
+  while (true) {
+      let [bestCombinations, firstBest] = findBestSolutions(compData, bestSize, currentSet, itemNames);
+      let newElem = mutation(bestCombinations, amountOfMutations, itemNames);
+      console.log('here3');
+
+      if (bestR.length === 0) {
+          bestR.push(firstBest);
+      } else {
+          let currentMax = bestR[0][0];
+          let secondKey = firstBest[0];
+
+          if (secondKey === currentMax) {
+              noImprovementCount += 1;
+          } else if (currentMax < secondKey) {
+              bestR = [firstBest];
+              noImprovementCount = 0;
+          }
+      }
+
+      currentSet = generateSearchArea(itemNames, areaSize - bestSize, n);
+      currentSet.push(...newElem);
+      iterationsCount += 1;
+
+      if (noImprovementCount >= noImprovementsNum) {
+          break;
+      }
+  }
+
+  let maxProductValue = bestR[0][0];
+  let finalSolution = bestR[0][1];
+
+  return { iterationsCount, finalSolution, maxProductValue };
+}
+
+
+
+
+
+
+    // Example usage:
+    const itemNames = [
+        ["a-1", "a-2", "a-3"],
+        ["b-1", "b-2", "b-3"],
+        // ["c-1", "c-2", "c-3"],
+        // ["d-1", "d-2", "d-3"]
+    ];
+    
+
+    // a1 b1 c1 d1
+    // a2 b2 c2 d2
+    // a3 b3 c3 d3
+
+
+    const amountInTeam = 4;
+    const teamsNumber = 3;
+    const testData = {
+        'a-1~b-1': 0.34,
+        'a-1~b-2': 0.7,
+        'a-1~b-3': 0.25,
+
+        'a-2~b-1': 0.81,
+        'a-2~b-2': 0.42,
+        'a-2~b-3': 0.21,
+
+        'a-3~b-1': 0.48,
+        'a-3~b-2': 0.37,
+        'a-3~b-3': 0.92,
+
+
+        'a-1~c-1': 0.32,
+        'a-1~c-2': 0.12,
+        'a-1~c-3': 0.56,
+
+        'a-2~c-1': 0.1,
+        'a-2~c-2': 0.89,
+        'a-2~c-3': 0.43,
+
+        'a-3~c-1': 0.23,
+        'a-3~c-2': 0.15,
+        'a-3~c-3': 0.59,
+
+
+        'a-1~d-1': 0.32,
+        'a-1~d-2': 0.12,
+        'a-1~d-3': 0.56,
+
+        'a-2~d-1': 0.1,
+        'a-2~d-2': 0.89,
+        'a-2~d-3': 0.43,
+
+        'a-3~d-1': 0.23,
+        'a-3~d-2': 0.15,
+        'a-3~d-3': 0.59,
+
+
+        'b-1~c-1': 0.22,
+        'b-1~c-2': 0.13,
+        'b-1~c-3': 0.55,
+
+        'b-2~c-1': 0.95,
+        'b-2~c-2': 0.23,
+        'b-2~c-3': 0.66,
+
+        'b-3~c-1': 0.58,
+        'b-3~c-2': 0.93,
+        'b-3~c-3': 0.78,
+
+
+        'b-1~d-1': 0.22,
+        'b-1~d-2': 0.13,
+        'b-1~d-3': 0.55,
+
+        'b-2~d-1': 0.95,
+        'b-2~d-2': 0.23,
+        'b-2~d-3': 0.66,
+
+        'b-3~d-1': 0.58,
+        'b-3~d-2': 0.93,
+        'b-3~d-3': 0.78,
+
+
+        'd-1~c-1': 0.32,
+        'd-1~c-2': 0.12,
+        'd-1~c-3': 0.56,
+
+        'd-2~c-1': 0.1,
+        'd-2~c-2': 0.89,
+        'd-2~c-3': 0.43,
+
+        'd-3~c-1': 0.23,
+        'd-3~c-2': 0.15,
+        'd-3~c-3': 0.59,
+    };
+
+    console.log(beeAlgorithm(itemNames, testData));
+
+
+</script>
+</html>
