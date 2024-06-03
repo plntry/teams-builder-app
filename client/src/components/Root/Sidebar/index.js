@@ -20,35 +20,35 @@ const Sidebar = () => {
   const sidebarMenuItems = [
     {
       icon: HomeOutlined,
-      label: "Home",
+      label: "Головна",
       path: "/",
     },
     {
       icon: BuildOutlined,
-      label: "Form Teams",
+      label: "Формування",
       path: "/form-teams",
     },
     {
       icon: DatabaseOutlined,
-      label: "Data",
+      label: "Дані",
       children: [
         {
-          label: "Specializations",
+          label: "Спеціалізації",
           path: "/specializations",
         },
         {
-          label: "Candidates",
+          label: "Кандидати",
           path: "/candidates",
         },
         {
-          label: "Compatibilities",
+          label: "Сумісності",
           path: "/compatibilities",
         },
       ],
     },
     {
       icon: InfoCircleOutlined,
-      label: "About",
+      label: "Інструкція",
       path: "/about",
     },
   ].map((item, index) => {

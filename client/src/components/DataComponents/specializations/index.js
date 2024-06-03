@@ -31,7 +31,7 @@ const Specializations = () => {
       key: "specialization_id",
     },
     {
-      title: "Name",
+      title: "Назва",
       dataIndex: "name",
       showSorterTooltip: {
         target: "full-header",
@@ -44,7 +44,7 @@ const Specializations = () => {
       key: "name",
     },
     {
-      title: "Action",
+      title: "Дія",
       key: "action",
       render: (el) => (
         <Space size="middle" key={el.specialization_id}>
@@ -52,13 +52,13 @@ const Specializations = () => {
             type="link"
             onClick={() => handleAddEditDeleteClick("edit", el)}
           >
-            Edit
+            Редагувати
           </Button>
           <Button
             type="link"
             onClick={() => handleAddEditDeleteClick("delete", el)}
           >
-            Delete
+            Видалити
           </Button>
         </Space>
       ),
@@ -106,12 +106,12 @@ const Specializations = () => {
             type="primary"
             onClick={() =>
               handleAddEditDeleteClick("add", {
-                specialization_id: "will be generated automatically",
+                specialization_id: "буде згенеровано автоматично",
                 name: "",
               })
             }
           >
-            Add New
+            Додати новий запис
           </Button>
         </Space>
         <Table

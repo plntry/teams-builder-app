@@ -64,7 +64,7 @@ const Compatibilities = () => {
       key: "compatibility_id",
     },
     {
-      title: "Candidate 1",
+      title: "Кандидат 1",
       dataIndex: "candidate1_name",
       filters: candidates.map((el) => {
         return { key: el.candidate_id, text: el.fullname, value: el.fullname };
@@ -74,7 +74,7 @@ const Compatibilities = () => {
       key: "candidate1_name",
     },
     {
-      title: "Candidate 2",
+      title: "Кандидат 2",
       dataIndex: "candidate2_name",
       filters: candidates.map((el) => {
         return { key: el.candidate_id, text: el.fullname, value: el.fullname };
@@ -84,13 +84,13 @@ const Compatibilities = () => {
       key: "candidate2_name",
     },
     {
-      title: "Compatibility",
+      title: "Сумісність",
       dataIndex: "compatibility",
       sorter: (a, b) => a.compatibility - b.compatibility,
       key: "compatibility",
     },
     {
-      title: "Action",
+      title: "Дія",
       key: "action",
       render: (el) => (
         <Space size="middle" key={el.compatibility_id_id}>
@@ -98,13 +98,13 @@ const Compatibilities = () => {
             type="link"
             onClick={() => handleAddEditDeleteClick("edit", el)}
           >
-            Edit
+            Редагувати
           </Button>
           <Button
             type="link"
             onClick={() => handleAddEditDeleteClick("delete", el)}
           >
-            Delete
+            Видалити
           </Button>
         </Space>
       ),
@@ -141,7 +141,7 @@ const Compatibilities = () => {
             type="primary"
             onClick={() =>
               handleAddEditDeleteClick("add", {
-                compatibility_id: "will be generated automatically",
+                compatibility_id: "буде згенеровано автоматично",
                 candidate1_id: candidates[0].candidate_id,
                 candidate2_id: candidates[1].candidate_id,
                 candidate1: candidates[0].fullname,
@@ -150,7 +150,7 @@ const Compatibilities = () => {
               })
             }
           >
-            Add New
+            Додати новий запис
           </Button>
         </Space>
         <Table

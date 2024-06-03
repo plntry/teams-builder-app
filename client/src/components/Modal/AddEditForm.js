@@ -65,13 +65,14 @@ const AddEditForm = ({
             rules: [
               {
                 required: true,
-                message: "The row should have an id!",
+                // message: "The row should have an id!",
+                message: "Запис має мати id!",
               },
             ],
             element: <Input disabled />,
           },
           {
-            label: "Full name",
+            label: "Повне ім'я",
             name: "fullname",
             rules: [
               {
@@ -79,7 +80,8 @@ const AddEditForm = ({
                 validator(rule, value) {
                   return new Promise((resolve, reject) => {
                     if (value === "" || value === null) {
-                      reject("Please enter the fullname!");
+                      // reject("Please enter the fullname!");
+                      reject("Будь ласка, введіть повне ім'я!");
                     } else if (value.length > 0) {
                       resolve();
                     }
@@ -98,11 +100,14 @@ const AddEditForm = ({
                 validator(rule, value) {
                   return new Promise((resolve, reject) => {
                     if (value === "" || value === null) {
-                      reject("Please enter the age!");
+                      // reject("Please enter the age!");
+                      reject("Будь ласка, введіть вік!");
                     } else if (!Number.isInteger(+value)) {
-                      reject("The age should be integer!");
+                      // reject("The age should be integer!");
+                      reject("Вік має бути цілим числом!");
                     } else if (value < 0) {
-                      reject("The age should be grater then zero!");
+                      // reject("The age should be grater then zero!");
+                      reject("Вік має бути більшим за 0!");
                     } else if (value >= 0) {
                       resolve();
                     }
@@ -118,7 +123,8 @@ const AddEditForm = ({
             rules: [
               {
                 required: true,
-                message: "Please select the specialization!",
+                // message: "Please select the specialization!",
+                message: "Будь ласка, оберіть спеціалізацію!",
               },
             ],
             element: (
@@ -142,13 +148,14 @@ const AddEditForm = ({
             rules: [
               {
                 required: true,
-                message: "The row should have an id!",
+                // message: "The row should have an id!",
+                message: "Запис має мати id!",
               },
             ],
             element: <Input disabled />,
           },
           {
-            label: "Name",
+            label: "Назва",
             name: "name",
             rules: [
               {
@@ -156,7 +163,8 @@ const AddEditForm = ({
                 validator(rule, value) {
                   return new Promise((resolve, reject) => {
                     if (value === "" || value === null) {
-                      reject("Please enter the name!");
+                      // reject("Please enter the name!");
+                      reject("Будь ласка, введіть назву!");
                     } else if (value.length > 0) {
                       resolve();
                     }
@@ -174,18 +182,20 @@ const AddEditForm = ({
             rules: [
               {
                 required: true,
-                message: "The row should have an id!",
+                // message: "The row should have an id!",
+                message: "Запис має мати id!",
               },
             ],
             element: <Input disabled />,
           },
           {
-            label: "Candidate 1",
+            label: "Кандидат 1",
             name: "candidate1",
             rules: [
               {
                 required: true,
-                message: "Please select the candidate 1!",
+                // message: "Please select the candidate 1!",
+                message: "Будь ласка, оберіть кандидата 1!",
               },
             ],
             element: (
@@ -201,12 +211,13 @@ const AddEditForm = ({
             ),
           },
           {
-            label: "Candidate 2",
+            label: "Кандидат 2",
             name: "candidate2",
             rules: [
               {
                 required: true,
-                message: "Please select the candidate 2!",
+                // message: "Please select the candidate 2!",
+                message: "Будь ласка, оберіть кандидата 2!",
               },
             ],
             element: (
@@ -222,7 +233,7 @@ const AddEditForm = ({
             ),
           },
           {
-            label: "Compatibility",
+            label: "Сумісність",
             name: "compatibility",
             rules: [
               {
@@ -230,12 +241,17 @@ const AddEditForm = ({
                 validator(rule, value) {
                   return new Promise((resolve, reject) => {
                     if (value === "" || value === null) {
-                      reject("Please enter the compatibility!");
+                      // reject("Please enter the compatibility!");
+                      reject("Будь ласка, введіть сумісність!");
                     } else if (isNaN(+value) || !(typeof +value === "number")) {
-                      reject("The compatibility should be a number!");
+                      // reject("The compatibility should be a number!");
+                      reject("Сумісність має бути числом!");
                     } else if (value < 0 || value > 1) {
+                      // reject(
+                      //   "The compatibility cannot be less then zero or grater then one!"
+                      // );
                       reject(
-                        "The compatibility cannot be less then zero or grater then one!"
+                        "Сумісність не може бути менше 0 або більше 1!"
                       );
                     } else {
                       resolve();

@@ -8,27 +8,26 @@ const About = () => {
       children: (
         <Flex vertical gap="20px">
           <Typography>
-            Manage your data in the{" "}
+            Керуйте даними у розділі{" "}
             <b>
-              <DatabaseOutlined /> Data
-            </b>{" "}
-            section
+              <DatabaseOutlined /> Дані
+            </b>
           </Typography>
           <Timeline
             items={[
               {
                 children: (
                   <Typography>
-                    Add and edit specializations' information in the{" "}
-                    <b>Specializations</b> section
+                    Додавайте та редагуйте інформацію про спеціалізації у
+                    розділі <b>Спеціалізації</b>
                   </Typography>
                 ),
               },
               {
                 children: (
                   <Typography>
-                    Add and edit candidates' information in the{" "}
-                    <b>Candidates</b> section
+                    Додавайте та редагуйте інформацію про кандидатів у розділі{" "}
+                    <b>Кандидати</b>
                   </Typography>
                 ),
               },
@@ -36,17 +35,17 @@ const About = () => {
                 children: (
                   <Flex vertical gap="20px">
                     <Typography>
-                      Add and edit compatibilities' information in the{" "}
-                      <b>Compatibilities</b> section
+                      Додавайте та редагуйте інформацію про сумісності у розділі{" "}
+                      <b>Сумісності</b>
                     </Typography>
                     <Timeline
                       items={[
                         {
                           children: (
                             <Typography>
-                              To form teams, you need to add compatibilities
-                              between each pair of candidates from different
-                              specializations
+                              Щоб сформувати команди, Вам необхідно додати
+                              сумісності між кожною парою обраних кандидатів з
+                              різних спеціалізацій
                             </Typography>
                           ),
                         },
@@ -64,61 +63,62 @@ const About = () => {
       children: (
         <Flex vertical gap="20px">
           <Typography>
-            Form the teams in the{" "}
+            Формуйте команди у розділі{" "}
             <b>
-              <BuildOutlined /> Form Teams
-            </b>{" "}
-            section
+              <BuildOutlined /> Формування
+            </b>
           </Typography>
           <Timeline
             items={[
               {
                 children: (
-                  <Typography>Select candidates to form teams</Typography>
+                  <Typography>
+                    Оберіть кандидатів для формування команд
+                  </Typography>
                 ),
               },
               {
                 children: (
                   <Flex vertical gap="20px">
                     <Typography>
-                      Specify your own parameters for the team formation process
-                      using the bee algorithm if needed
+                      За потреби вкажіть власні значення для параметрів
+                      бджолиного алгоритму для процесу формування команд
                     </Typography>
                     <Timeline
                       items={[
                         {
                           children: (
                             <Typography>
-                              <b>Area Size</b>: The size of the search area.
-                              This parameter determines the number of candidate
-                              solutions generated in the initial search area and
-                              in subsequent iterations
+                              <b>Область пошуку</b>: Розмір області пошуку. Цей
+                              параметр визначає кількість варіантів рішення,
+                              згенерованих у початковій області пошуку та в
+                              наступних ітераціях
                             </Typography>
                           ),
                         },
                         {
                           children: (
                             <Typography>
-                              <b>Best Size</b>: The number of best solutions to
-                              be retained and used for generating new solutions
-                              in each iteration
+                              <b>Найкращі рішення</b>: Кількість найкращих
+                              рішень, які потрібно зберегти та використовувати
+                              для створення нових рішень у кожній ітерації
                             </Typography>
                           ),
                         },
                         {
                           children: (
                             <Typography>
-                              <b>No Improvements Number</b>: The maximum number
-                              of iterations allowed without improvement in the
-                              best solution found
+                              <b>Ітерації без покращення</b>: Максимальна
+                              дозволена кількість ітерацій без покращення
+                              значення цільової функції
                             </Typography>
                           ),
                         },
                         {
                           children: (
                             <Typography>
-                              <b>Amount Of Mutations</b>: The number of
-                              mutations in every iteration
+                              <b>Кількість мутацій</b>: Кількість мутацій у
+                              кожній ітерації
                             </Typography>
                           ),
                         },
@@ -129,7 +129,9 @@ const About = () => {
               },
               {
                 children: (
-                  <Typography>Form the teams and check the results</Typography>
+                  <Typography>
+                    Сформуйте команди та перегляньте результати
+                  </Typography>
                 ),
               },
             ]}

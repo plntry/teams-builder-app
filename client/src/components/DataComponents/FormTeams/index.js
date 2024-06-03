@@ -154,7 +154,6 @@ const FormTeams = () => {
 
       itemNames.push(specializationCandidates);
     }
-    console.log(itemNames, "item names");
 
     compatibilities.forEach((el) => {
       let id1 = el.candidate1_id;
@@ -172,8 +171,6 @@ const FormTeams = () => {
 
       compData[`${spec1}-${id1}~${spec2}-${id2}`] = el.compatibility;
     });
-
-    console.log(compData, "comp data test");
 
     setItemNames(itemNames);
     setCompData(compData);
@@ -196,26 +193,27 @@ const FormTeams = () => {
     if (!chosenCandidates.length) {
       messageApi.open({
         type: "error",
-        content: "You should choose candidates first",
+        // content: "You should choose candidates first",
+        content: "Необхідно обрати кандидатів",
       });
     } else if (!isSameAmount) {
       messageApi.open({
         type: "error",
-        content:
-          "The amount of the candidates should be the same for every specialization",
+        // content: "The amount of the candidates should be the same for every specialization",
+        content: "Кількість кандидатів має бути однакова по кожній з обраних спеціалізацій",
       });
     } else if (!isAmountMoreThanOne) {
       messageApi.open({
         type: "error",
-        content:
-          "The amount of the candidates from every specialization should be more than 1",
+        // content: "The amount of the candidates from every specialization should be more than 1",
+        content: "Кількість кандидатів з кожної з обраних спеціалізацій має бути більша за 1",
       });
     } else if (!checkCompatibilitiesDataRes.isFullData) {
       messageApi.open({
         type: "error",
         content: (
           <>
-            The compatibility data is missed for the next pairs:
+            Відсутня інформація про сумісність для наступних пар:
             <div>
               {checkCompatibilitiesDataRes.pairs.map((pair) => (
                 <div>{pair}</div>
@@ -232,56 +230,57 @@ const FormTeams = () => {
 
   const customParametersElements = [
     {
-      label: "Area Size",
+      label: "Область пошуку",
       disabled: !useCustomParametersValues ?? true,
       min: 5,
       max: 30,
       defaultValue: areaSize,
       step: 1,
       onChange: areaSizeInputChange,
-      tooltip: 'The size of the search area. This parameter determines the number of candidate solutions generated in the initial search area and in subsequent iterations'
+      tooltip: 'Розмір області пошуку. Цей параметр визначає кількість варіантів рішення, згенерованих у початковій області пошуку та в наступних ітераціях'
     },
     {
-      label: "Best Size",
+      label: "Найкращі рішення",
       disabled: !useCustomParametersValues ?? true,
       min: 1,
       max: 10,
       defaultValue: bestSize,
       step: 1,
       onChange: bestSizeInputChange,
-      tooltip: 'The number of best solutions to be retained and used for generating new solutions in each iteration'
+      tooltip: 'Кількість найкращих рішень, які потрібно зберегти та використовувати для створення нових рішень у кожній ітерації'
     },
     {
-      label: "No Improvements Number",
+      label: "Ітерації без покращення",
       disabled: !useCustomParametersValues ?? true,
       min: 1,
       max: 30,
       defaultValue: noImprovementsNum,
       step: 1,
       onChange: noImprovementsNumInputChange,
-      tooltip: 'The maximum number of iterations allowed without improvement in the best solution found'
+      tooltip: 'Максимальна дозволена кількість ітерацій без покращення значення цільової функції'
     },
     {
-      label: "Amount Of Mutations",
+      label: "Кількість мутацій",
       disabled: !useCustomParametersValues ?? true,
       min: 1,
       max: 10,
       defaultValue: amountOfMutations,
       step: 1,
       onChange: amountOfMutationsInputChange,
-      tooltip: 'The number of mutations in every iteration'
+      tooltip: 'Кількість мутацій у кожній ітерації'
     },
   ];
 
   const formElements = [
     {
-      label: "Select target candidates to form the teams",
+      // label: "Select target candidates to form the teams",
+      label: "Оберіть цільових кандидатів для формування команд",
       name: `chosenCandidates`,
       element: (
         <Flex justify="center" align="center" gap="30px">
           <Transfer
             dataSource={candidatesDataSource}
-            titles={["Source", "Target"]}
+            titles={["Кандидати", "Обрані кандидати"]}
             targetKeys={targetKeys}
             selectedKeys={selectedKeys}
             onChange={handleChange}
@@ -327,8 +326,8 @@ const FormTeams = () => {
             onChange={useCustomParametersValuesCheckboxChange}
           >
             <Flex gap="8px">
-              Use Custom Algorithm Parameters
-              <Tooltip title="The ability to set a custom parameters for bee algorithm">
+              Користувацькі налаштування
+              <Tooltip title="Чи необхідно встановити користувацькі значення для параметрів бджолиного алгоритму">
                 <QuestionCircleOutlined />
               </Tooltip>
             </Flex>
@@ -372,7 +371,7 @@ const FormTeams = () => {
         <Flex vertical justify="center" align="center">
           {contextHolder}
           <Button type="primary" htmlType="submit" onClick={onSubmitFormClick}>
-            Form the teams
+            Сформувати команди
           </Button>
         </Flex>
       ),

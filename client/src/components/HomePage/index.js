@@ -15,7 +15,7 @@ const HomePage = () => {
   const contentStyle = {
     margin: 0,
     height: "360px",
-    color: colorText,
+    color: "white",
     lineHeight: "360px",
     fontSize: "26px",
     textAlign: "center",
@@ -51,10 +51,10 @@ const HomePage = () => {
           }}
         >
           <div>
-            <h3 style={contentStyle}>Add your data</h3>
+            <h3 style={contentStyle}>Додайте дані</h3>
           </div>
           <div>
-            <h3 style={contentStyle}>Form teams with the best synergy</h3>
+            <h3 style={contentStyle}>Сформуйте команди з найкращою сумісністю</h3>
           </div>
         </Carousel>
       </Flex>
@@ -73,10 +73,10 @@ const HomePage = () => {
           size="large"
           onClick={() => handleNavigate("/form-teams")}
         >
-          Start forming teams
+          Почати формування команд
         </Button>
         <Button type="dashed" onClick={() => handleNavigate("/about")}>
-          Learn more
+          Дізнатись більше
         </Button>
       </Flex>
     </Flex>

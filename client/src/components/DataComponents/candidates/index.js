@@ -56,13 +56,13 @@ const Candidates = () => {
       key: "candidate_id",
     },
     {
-      title: "Full Name",
+      title: "Повне ім'я",
       dataIndex: "fullname",
       sorter: (a, b) => a.fullname.localeCompare(b.fullname),
       key: "fullname",
     },
     {
-      title: "Specialization",
+      title: "Спеціалізація",
       dataIndex: "specialization_name",
       filters: specializations.map((el) => {
         return { key: el.specialization_id, text: el.name, value: el.name };
@@ -74,13 +74,13 @@ const Candidates = () => {
       key: "specialization_name",
     },
     {
-      title: "Age",
+      title: "Вік",
       dataIndex: "age",
       sorter: (a, b) => a.age - b.age,
       key: "age",
     },
     {
-      title: "Action",
+      title: "Дія",
       key: "action",
       render: (el) => (
         <Space size="middle" key={el.candidate_id}>
@@ -88,13 +88,13 @@ const Candidates = () => {
             type="link"
             onClick={() => handleAddEditDeleteClick("edit", el)}
           >
-            Edit
+            Редагувати
           </Button>
           <Button
             type="link"
             onClick={() => handleAddEditDeleteClick("delete", el)}
           >
-            Delete
+            Видалити
           </Button>
         </Space>
       ),
@@ -130,7 +130,7 @@ const Candidates = () => {
           type="primary"
           onClick={() =>
             handleAddEditDeleteClick("add", {
-              candidate_id: "will be generated automatically",
+              candidate_id: "буде згенеровано автоматично",
               fullname: "",
               age: "",
               specialization_id: specializations[0].specialization_id,
@@ -138,7 +138,7 @@ const Candidates = () => {
             })
           }
         >
-          Add New
+          Додати новий запис
         </Button>
       </Space>
       <Table

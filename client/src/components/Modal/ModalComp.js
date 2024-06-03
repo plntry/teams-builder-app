@@ -15,16 +15,18 @@ const ModalComp = ({
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState(
     modalState.action === "edit" || modalState.action === "add"
-      ? "Please fill the data and save the changes"
-      : "Do you want to remove this row from the database?"
+      // ? "Please fill the data and save the changes"
+      ? "Будь ласка, заповніть дані та збережіть зміни"
+      // : "Do you want to remove this row from the database?"
+      : "Ви хочете видалити цей рядок?"
   );
 
   const modalTitle =
     modalState.action === "edit"
-      ? "Edit Row"
+      ? "Редагування запису"
       : modalState.action === "add"
-      ? "Add New Row"
-      : "Delete Row";
+      ? "Створення нового запису"
+      : "Видалення запису";
 
   const handleOk = () => {
     setModalText("Success!");
@@ -37,7 +39,7 @@ const ModalComp = ({
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    // console.log("Clicked cancel button");
     setModalState(false);
   };
 

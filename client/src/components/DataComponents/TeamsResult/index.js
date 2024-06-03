@@ -55,7 +55,7 @@ const TeamsResult = () => {
     });
 
     teamsList.push({
-      header: <Typography.Title level={4}>Team {i + 1}</Typography.Title>,
+      header: <Typography.Title level={4}>Команда {i + 1}</Typography.Title>,
       data: data,
       renderItem: (item) => {
         return (
@@ -85,7 +85,7 @@ const TeamsResult = () => {
   return (
     <Flex vertical gap="20px" wrap="wrap" justify="center" align="center">
       <Typography.Title level={2}>
-        The teams were formed, result is:
+        Команди було сформовано
       </Typography.Title>
       <Flex gap="20px" wrap="wrap" justify="center" align="center">
         {teamsList.map((el, i) => {
@@ -111,7 +111,7 @@ const TeamsResult = () => {
           <Flex vertical gap="20px">
             <Card bordered={true}>
               <Statistic
-                title="Area Size"
+                title="Область пошуку"
                 value={useCustomParametersValues ? areaSize : 8}
                 precision={0}
                 valueStyle={{
@@ -121,7 +121,7 @@ const TeamsResult = () => {
             </Card>
             <Card bordered={true}>
               <Statistic
-                title="Best Size"
+                title="Найкращі рішення"
                 value={useCustomParametersValues ? bestSize: 2}
                 precision={0}
                 valueStyle={{
@@ -133,7 +133,7 @@ const TeamsResult = () => {
           <Flex vertical gap="20px">
             <Card bordered={true}>
               <Statistic
-                title="No Improvements Number"
+                title="Ітерації без покращення"
                 value={useCustomParametersValues ? noImprovementsNum: 5}
                 precision={0}
                 valueStyle={{
@@ -143,7 +143,7 @@ const TeamsResult = () => {
             </Card>
             <Card bordered={true}>
               <Statistic
-                title="Amount of Mutations"
+                title="Кількість мутацій"
                 value={useCustomParametersValues ? amountOfMutations : 2}
                 precision={0}
                 valueStyle={{
@@ -156,7 +156,7 @@ const TeamsResult = () => {
         <Flex vertical justify="center" align="center" gap="20px">
           <Card bordered={true}>
             <Statistic
-              title="General Compatibility"
+              title="Загальна сумісність"
               value={algorithmResult.maxProductValue}
               precision={2}
               valueStyle={{
@@ -167,7 +167,7 @@ const TeamsResult = () => {
           <Flex gap="20px">
             <Card bordered={true}>
               <Statistic
-                title="Iterations Amount"
+                title="Кількість ітерацій"
                 value={algorithmResult.performanceData.iterationsCount}
                 precision={0}
                 valueStyle={{
@@ -177,7 +177,7 @@ const TeamsResult = () => {
             </Card>
             <Card bordered={true}>
               <Statistic
-                title="Performance Time"
+                title="Час роботи"
                 value={algorithmResult.performanceData.timeTaken}
                 precision={2}
                 valueStyle={{
@@ -194,7 +194,7 @@ const TeamsResult = () => {
         style={{ maxWidth: "300px" }}
         onClick={() => navigate("/form-teams")}
       >
-        Go back to the choosing candidates
+        Повернутись до вибору кандидатів
       </Button>
     </Flex>
   );
