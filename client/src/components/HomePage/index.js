@@ -25,7 +25,6 @@ const HomePage = () => {
   };
 
   const handleNavigate = (link) => {
-    console.log(sidebarElementIndexes[link], "sidebarElementIndexes[link]");
     setSidebarSelectedElement(sidebarElementIndexes[link]);
     navigate(link);
   };

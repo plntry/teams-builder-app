@@ -184,6 +184,7 @@ const FormTeams = () => {
     const isAmountMoreThanOne = specializationRepeats.every(
       (value) => value > 1
     );
+    const isSpecAmountMoreThanOne = specializationRepeats.length > 1;
     const checkCompatibilitiesDataRes = checkCompatibilitiesData(
       chosenCandidates,
       candidates,
@@ -223,6 +224,12 @@ const FormTeams = () => {
             </div>
           </>
         ),
+      });
+    } else if (!isSpecAmountMoreThanOne) {
+      messageApi.open({
+        type: "error",
+        content:
+          "Має бути обрано кандидатів принаймні із двох різних спеціалізацій",
       });
     } else {
       formDataForBeeAlgorithm();
