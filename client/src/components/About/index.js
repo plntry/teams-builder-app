@@ -144,7 +144,7 @@ const About = () => {
   return (
     <Flex vertical gap="20px" justify="center" align="center">
       <Typography.Title level={3} style={{ textAlign: "center" }}>
-        How to use the system
+        Як користуватися системою
       </Typography.Title>
       <Timeline items={timelineData} />
     </Flex>
