@@ -326,6 +326,16 @@ const AddEditForm = ({
           return el;
         });
         setCandidates(updatedData);
+
+        let updatedComptibilities = compatibilities.map((el) => {
+          if (el.candidate1_id === body.candidate_id) {
+            return { ...el, candidate1_name: body.fullname };
+          } else if (el.candidate2_id === body.candidate_id) {
+            return { ...el, candidate2_name: body.fullname };
+          }
+          return el;
+        });
+        setCompatibilities(updatedComptibilities);
       } else if (formState === "delete") {
         url = `${baseUrl}/candidates/${values.candidate_id}`;
         body = {};
@@ -363,6 +373,14 @@ const AddEditForm = ({
           return el;
         });
         setSpecializations(updatedData);
+
+        let updatedCandidates = candidates.map((el) => {
+          if (el.specialization_id === body.specialization_id) {
+            return { ...el, specialization_name: body.name };
+          }
+          return el;
+        });
+        setCandidates(updatedCandidates);
       } else if (formState === "delete") {
         url = `${baseUrl}/specializations/${values.specialization_id}`;
         body = {};

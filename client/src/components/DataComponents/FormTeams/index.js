@@ -200,13 +200,15 @@ const FormTeams = () => {
       messageApi.open({
         type: "error",
         // content: "The amount of the candidates should be the same for every specialization",
-        content: "Кількість кандидатів має бути однакова по кожній з обраних спеціалізацій",
+        content:
+          "Кількість кандидатів має бути однакова по кожній з обраних спеціалізацій",
       });
     } else if (!isAmountMoreThanOne) {
       messageApi.open({
         type: "error",
         // content: "The amount of the candidates from every specialization should be more than 1",
-        content: "Кількість кандидатів з кожної з обраних спеціалізацій має бути більша за 1",
+        content:
+          "Кількість кандидатів з кожної з обраних спеціалізацій має бути більша за 1",
       });
     } else if (!checkCompatibilitiesDataRes.isFullData) {
       messageApi.open({
@@ -237,7 +239,8 @@ const FormTeams = () => {
       defaultValue: areaSize,
       step: 1,
       onChange: areaSizeInputChange,
-      tooltip: 'Розмір області пошуку. Цей параметр визначає кількість варіантів рішення, згенерованих у початковій області пошуку та в наступних ітераціях'
+      tooltip:
+        "Розмір області пошуку. Цей параметр визначає кількість варіантів рішення, згенерованих у початковій області пошуку та в наступних ітераціях",
     },
     {
       label: "Найкращі рішення",
@@ -247,7 +250,8 @@ const FormTeams = () => {
       defaultValue: bestSize,
       step: 1,
       onChange: bestSizeInputChange,
-      tooltip: 'Кількість найкращих рішень, які потрібно зберегти та використовувати для створення нових рішень у кожній ітерації'
+      tooltip:
+        "Кількість найкращих рішень, які потрібно зберегти та використовувати для створення нових рішень у кожній ітерації",
     },
     {
       label: "Ітерації без покращення",
@@ -257,7 +261,8 @@ const FormTeams = () => {
       defaultValue: noImprovementsNum,
       step: 1,
       onChange: noImprovementsNumInputChange,
-      tooltip: 'Максимальна дозволена кількість ітерацій без покращення значення цільової функції'
+      tooltip:
+        "Максимальна дозволена кількість ітерацій без покращення значення цільової функції",
     },
     {
       label: "Кількість мутацій",
@@ -267,14 +272,24 @@ const FormTeams = () => {
       defaultValue: amountOfMutations,
       step: 1,
       onChange: amountOfMutationsInputChange,
-      tooltip: 'Кількість мутацій у кожній ітерації'
+      tooltip: "Кількість мутацій у кожній ітерації",
     },
   ];
 
   const formElements = [
     {
       // label: "Select target candidates to form the teams",
-      label: "Оберіть цільових кандидатів для формування команд",
+      label: (
+        <Flex
+          justify="center"
+          align="center"
+          style={{ textAlign: "center", width: "100vw" }}
+        >
+          <Typography.Title level={2} align="right">
+            Оберіть цільових кандидатів для формування команд
+          </Typography.Title>
+        </Flex>
+      ),
       name: `chosenCandidates`,
       element: (
         <Flex justify="center" align="center" gap="30px">
@@ -391,6 +406,7 @@ const FormTeams = () => {
           return (
             <Form.Item
               label={el.label}
+              labelAlign="right"
               labelCol
               rules={el.rules}
               key={el.name}
