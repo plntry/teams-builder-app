@@ -241,7 +241,7 @@ const FormTeams = () => {
     {
       label: "Область пошуку",
       disabled: !useCustomParametersValues ?? true,
-      min: 5,
+      min: 1,
       max: 30,
       defaultValue: areaSize,
       step: 1,
