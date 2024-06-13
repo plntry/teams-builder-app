@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Flex, Button, List, Typography, Tag, Card, Statistic } from "antd";
-import beeAlgorithm from "../../../beeAlgorithm";
 import useStore from "../../../store/store";
+import BeeAlgorithm from "../../../beeAlgorithm";
 
 const TeamsResult = () => {
   const navigate = useNavigate();
@@ -25,20 +25,21 @@ const TeamsResult = () => {
   const teamsList = [];
 
   useEffect(() => {
+    let params = [itemNames, compData];
+
     if (useCustomParametersValues) {
-      setAlgorithmResult(
-        beeAlgorithm(
-          itemNames,
-          compData,
-          +areaSize,
-          +bestSize,
-          +noImprovementsNum,
-          +amountOfMutations
-        )
-      );
-    } else {
-      setAlgorithmResult(beeAlgorithm(itemNames, compData));
+      params = [
+        itemNames,
+        compData,
+        +areaSize,
+        +bestSize,
+        +noImprovementsNum,
+        +amountOfMutations,
+      ];
     }
+    
+    const beeAlgorithm = new BeeAlgorithm(...params);
+    setAlgorithmResult(beeAlgorithm.run());
   }, []);
 
   algorithmResult.finalSolution.forEach((teamArray, i) => {
@@ -84,9 +85,7 @@ const TeamsResult = () => {
 
   return (
     <Flex vertical gap="20px" wrap="wrap" justify="center" align="center">
-      <Typography.Title level={2}>
-        Команди було сформовано
-      </Typography.Title>
+      <Typography.Title level={2}>Команди було сформовано</Typography.Title>
       <Flex gap="20px" wrap="wrap" justify="center" align="center">
         {teamsList.map((el, i) => {
           return (
@@ -102,11 +101,7 @@ const TeamsResult = () => {
           );
         })}
       </Flex>
-      <Flex
-        justify="center"
-        align="center"
-        gap="50px"
-      >
+      <Flex justify="center" align="center" gap="50px">
         <Flex justify="center" align="center" gap="20px">
           <Flex vertical gap="20px">
             <Card bordered={true}>
@@ -122,7 +117,7 @@ const TeamsResult = () => {
             <Card bordered={true}>
               <Statistic
                 title="Найкращі рішення"
-                value={useCustomParametersValues ? bestSize: 2}
+                value={useCustomParametersValues ? bestSize : 2}
                 precision={0}
                 valueStyle={{
                   color: "#d48806",
@@ -134,7 +129,7 @@ const TeamsResult = () => {
             <Card bordered={true}>
               <Statistic
                 title="Ітерації без покращення"
-                value={useCustomParametersValues ? noImprovementsNum: 5}
+                value={useCustomParametersValues ? noImprovementsNum : 5}
                 precision={0}
                 valueStyle={{
                   color: "#d48806",

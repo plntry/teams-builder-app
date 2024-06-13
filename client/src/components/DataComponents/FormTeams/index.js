@@ -237,6 +237,10 @@ const FormTeams = () => {
     }
   };
 
+  // 4 cand. - 2 from 2 - 4 max
+  // 6 cand. - 2 from 3 - 8 max
+  // 8 cand. - 2 from 4 - 16 max
+
   const customParametersElements = [
     {
       label: "Область пошуку",

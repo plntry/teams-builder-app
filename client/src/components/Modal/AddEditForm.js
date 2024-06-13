@@ -92,7 +92,7 @@ const AddEditForm = ({
             element: <Input disabled={formState === "delete"} />,
           },
           {
-            label: "Age",
+            label: "Вік",
             name: "age",
             rules: [
               {
@@ -118,7 +118,7 @@ const AddEditForm = ({
             element: <Input />,
           },
           {
-            label: "Specialization",
+            label: "Спеціалізація",
             name: "specialization",
             rules: [
               {
