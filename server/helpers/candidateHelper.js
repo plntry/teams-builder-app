@@ -4,7 +4,6 @@ const candidate = {};
 candidate.create = async (req, res) => {
   try {
     const { fullname, age, specialization_id } = req.body;
-    console.log(req.body);
 
     const newCandidate = await pool.query(
       "INSERT INTO candidate (fullname, age, specialization_id) VALUES ($1, $2, $3) RETURNING *",
@@ -29,7 +28,6 @@ candidate.getAll = async (req, res) => {
 candidate.getById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id, 'candidate id');
 
     const candidate = await pool.query(
       "SELECT * FROM candidate WHERE candidate_id = $1",
@@ -45,7 +43,6 @@ candidate.update = async (req, res) => {
   try {
     const { id } = req.params;
     const { fullname, age, specialization_id } = req.body;
-    console.log(res.params);
 
     const updateCandidate = await pool.query(
       "UPDATE candidate SET fullname = $1, age = $2, specialization_id = $3 WHERE candidate_id = $4",

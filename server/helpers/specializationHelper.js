@@ -4,7 +4,6 @@ const specialization = {};
 specialization.create = async (req, res) => {
   try {
     const { name } = req.body;
-    console.log(req.body);
 
     const newCandidate = await pool.query(
       "INSERT INTO specialization (name) VALUES ($1) RETURNING *",
@@ -29,7 +28,6 @@ specialization.getAll = async (req, res) => {
 specialization.getById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id, 'specialization id');
 
     const specialization = await pool.query(
       "SELECT * FROM specialization WHERE specialization_id = $1",
@@ -45,7 +43,6 @@ specialization.update = async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
-    console.log(res.params);
 
     const updateCandidate = await pool.query(
       "UPDATE specialization SET name = $1 WHERE specialization_id = $2",
