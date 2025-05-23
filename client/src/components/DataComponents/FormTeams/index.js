@@ -16,6 +16,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import useStore from "../../../store/store";
 import apiHelper from "../../../api/helper";
 import checkCompatibilitiesData from "./validationHelper";
+import getSpecializationColor from "../../../utils/getSpecializationColor";
 
 const FormTeams = () => {
   const navigate = useNavigate();
@@ -73,15 +74,15 @@ const FormTeams = () => {
     let chosenSpecializationsToSet = {};
 
     chosenCandidates.forEach((id) => {
-      let candidate = candidates[id - 1];
+      let candidate = candidates.find((c) => c.candidate_id === +id);
 
       if (
-        !chosenSpecializationsToSet.hasOwnProperty(candidate.specialization_id)
+        !chosenSpecializationsToSet.hasOwnProperty(candidate?.specialization_id)
       ) {
-        chosenSpecializationsToSet[candidate.specialization_id] = 0;
+        chosenSpecializationsToSet[candidate?.specialization_id] = 0;
       }
 
-      chosenSpecializationsToSet[candidate.specialization_id] += 1;
+      chosenSpecializationsToSet[candidate?.specialization_id] += 1;
     });
 
     setChosenSpecializations(chosenSpecializationsToSet);
@@ -315,17 +316,7 @@ const FormTeams = () => {
               return (
                 <Flex gap="7px">
                   <Typography>{item.fullname}</Typography>
-                  <Tag
-                    color={
-                      item.specialization_name === "manager"
-                        ? "purple"
-                        : item.specialization_name === "developer"
-                        ? "cyan"
-                        : item.specialization_name === "designer"
-                        ? "volcano"
-                        : "green"
-                    }
-                  >
+                  <Tag color={getSpecializationColor(item.specialization_name)}>
                     {item.specialization_name}
                   </Tag>
                 </Flex>

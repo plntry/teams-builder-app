@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Flex, Button, List, Typography, Tag, Card, Statistic } from "antd";
 import useStore from "../../../store/store";
 import BeeAlgorithm from "../../../beeAlgorithm";
+import getSpecializationColor from "../../../utils/getSpecializationColor";
 
 const TeamsResult = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const TeamsResult = () => {
         +amountOfMutations,
       ];
     }
-    
+
     const beeAlgorithm = new BeeAlgorithm(...params);
     setAlgorithmResult(beeAlgorithm.run());
   }, []);
@@ -63,17 +64,7 @@ const TeamsResult = () => {
           <List.Item>
             <Flex gap="7px">
               <Typography>{item.fullname}</Typography>
-              <Tag
-                color={
-                  item.specialization_name === "manager"
-                    ? "purple"
-                    : item.specialization_name === "developer"
-                    ? "cyan"
-                    : item.specialization_name === "designer"
-                    ? "volcano"
-                    : "green"
-                }
-              >
+              <Tag color={getSpecializationColor(item.specialization_name)}>
                 {item.specialization_name}
               </Tag>
             </Flex>

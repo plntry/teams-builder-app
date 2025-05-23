@@ -5,7 +5,7 @@ import useStore from "../../../store/store.js";
 import apiHelper from "../../../api/helper.js";
 
 const Specializations = () => {
-  const specializations = useStore.use.specializations();
+  const specializations = useStore.use.specializations() || [];
   const setSpecializations = useStore.use.setSpecializations();
 
   const [modalState, setModalState] = useState({
@@ -73,7 +73,7 @@ const Specializations = () => {
       }
 
       getData();
-    } 
+    }
   }, []);
 
   return (
