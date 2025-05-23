@@ -39,7 +39,6 @@ const ModalComp = ({
   };
 
   const handleCancel = () => {
-    // console.log("Clicked cancel button");
     setModalState(false);
   };
 

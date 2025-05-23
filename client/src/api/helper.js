@@ -26,7 +26,7 @@ const getSpecializations = async () => {
       .sort((a, b) => a.specialization_id - b.specialization_id);
     return preparedData;
   } catch (err) {
-    console.log(`Error in getting specializations: ${err.message}`);
+    console.error(`Error in getting specializations: ${err.message}`);
     return 0;
   }
 };
@@ -52,7 +52,7 @@ const getCandidates = async (specializations = []) => {
 
     return preparedData;
   } catch (err) {
-    console.log(`Error in getting candidates: ${err.message}`);
+    console.error(`Error in getting candidates: ${err.message}`);
   }
 };
 
@@ -80,7 +80,7 @@ const getCompatibilities = async (candidates = []) => {
 
     return preparedData;
   } catch (err) {
-    console.log(`Error in getting compatibilities: ${err.message}`);
+    console.error(`Error in getting compatibilities: ${err.message}`);
   }
 };
 

@@ -12,7 +12,7 @@ compatibility.create = async (req, res) => {
 
     res.json(newCompatibility.rows[0]);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -21,7 +21,7 @@ compatibility.getAll = async (req, res) => {
     const allCompatibility = await pool.query("SELECT * FROM compatibility");
     res.json(allCompatibility.rows);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -35,7 +35,7 @@ compatibility.getById = async (req, res) => {
     );
     res.json(compatibility.rows[0]);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -50,7 +50,7 @@ compatibility.update = async (req, res) => {
     );
     res.json("compatibility was updated!");
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -64,7 +64,7 @@ compatibility.delete = async (req, res) => {
     );
     res.json("compatibility info was deleted!");
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 

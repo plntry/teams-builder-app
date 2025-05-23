@@ -12,7 +12,7 @@ specialization.create = async (req, res) => {
 
     res.json(newCandidate.rows[0]);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -21,7 +21,7 @@ specialization.getAll = async (req, res) => {
     const allSpecializations = await pool.query("SELECT * FROM specialization");
     res.json(allSpecializations.rows);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -35,7 +35,7 @@ specialization.getById = async (req, res) => {
     );
     res.json(specialization.rows[0]);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -50,7 +50,7 @@ specialization.update = async (req, res) => {
     );
     res.json("specialization info was updated!");
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -64,7 +64,7 @@ specialization.delete = async (req, res) => {
     );
     res.json("specialization was deleted!");
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 

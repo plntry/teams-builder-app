@@ -12,7 +12,7 @@ candidate.create = async (req, res) => {
 
     res.json(newCandidate.rows[0]);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -21,7 +21,7 @@ candidate.getAll = async (req, res) => {
     const allCandidates = await pool.query("SELECT * FROM candidate");
     res.json(allCandidates.rows);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -35,7 +35,7 @@ candidate.getById = async (req, res) => {
     );
     res.json(candidate.rows[0]);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -50,7 +50,7 @@ candidate.update = async (req, res) => {
     );
     res.json("candidate info was updated!");
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -64,7 +64,7 @@ candidate.delete = async (req, res) => {
     );
     res.json("candidate info was deleted!");
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
